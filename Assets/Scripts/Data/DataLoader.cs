@@ -8,24 +8,27 @@ namespace Data {
 
         public static DataLoader Instance => _init ??= new DataLoader();
 
-        private static List<NoteData> _noteData;
+        private static List<LiveNoteData> _noteData;
         private static List<NoteData> _writeNoteData = new List<NoteData>();
         private static int _index;
 
-        public static List<NoteData> GetNoteData() => _noteData;
+        public static List<LiveNoteData> GetNoteData() => _noteData;
 
         public static int GetIndex() => _index;
 
         public static bool IsTop(int i) => _index + i >= _noteData.Count;
 
-        public static NoteData Pick() => _noteData[_index];
+        public static LiveNoteData Pick() => _noteData[_index];
 
-        public static NoteData Pick(int i) => _noteData[_index + i];
+        public static LiveNoteData Pick(int i) => _noteData[_index + i];
         
-        public static NoteData Pop() => _noteData[_index++];
+        public static LiveNoteData Pop() => _noteData[_index++];
 
         public static void LoadData() {
-            _noteData = new List<NoteData>(Json.LoadJsonFile<GlobalNoteData>("data").data);
+            _noteData = new List<LiveNoteData>();
+            foreach (var noteData in Json.LoadJsonFile<GlobalNoteData>("data").data) {
+                _noteData.Add(new LiveNoteData(noteData));
+            }
             Debug.Log(string.Join(", ", _noteData));
         }
 

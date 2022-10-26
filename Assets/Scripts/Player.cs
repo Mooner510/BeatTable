@@ -19,10 +19,10 @@ public class Player : MonoBehaviour {
         DataLoader.Instance.Start();
     }
 
-    public IEnumerator Accept(NoteData note, float time) {
+    public IEnumerator Accept(LiveNoteData note, float time) {
         var colored = false;
         yield return new WaitForSeconds(time);
-        KeyBinder.Instance.Queue(new LiveNoteData(note));
+        KeyBinder.Instance.Queue(note);
         var o = Instantiate(beatInspector, Utils.Locator(note.note), Quaternion.identity);
         for (var delta = 0f; delta <= 1.25; delta += Time.deltaTime) {
             yield return null;

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Data;
+using Map;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +12,7 @@ public class KeyBinder : MonoBehaviour {
     [SerializeField] private Text scoreTag;
     
     private static readonly KeyCode[] KeyCodes = {
-        KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3, KeyCode.Keypad4, KeyCode.Keypad5, KeyCode.Keypad6,
-        KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9
+        KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9, KeyCode.Keypad4, KeyCode.Keypad5, KeyCode.Keypad6, KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3
     };
 
     private KeyCode _code;
@@ -33,16 +33,23 @@ public class KeyBinder : MonoBehaviour {
         for (var i = 0; i < 9; i++) {
             _code = KeyCodes[i];
             if (!Input.GetKeyDown(_code)) continue;
+            // Debug.Log($"id: {i}");
+            MapMaker.Instance.Click(i);
+            Ticker.Instance.Beat();
             if (!Player.Instance.isPlay) {
                 DataLoader.AddNote(i);
             } else {
-                if (_noteQueue[i].Count <= 0) continue;
+                LiveNoteData liveNoteData = null;
+                while (_noteQueue[i].Count > 0 && liveNoteData == null) {
+                    liveNoteData = _noteQueue[i].Dequeue();
+                    if (liveNoteData.clicked) liveNoteData = null;
+                }
+                if(liveNoteData == null) return;
                 var ticker = Ticker.Instance;
-                var liveNoteData = _noteQueue[i].Dequeue();
                 liveNoteData.Click();
-                var diff = Math.Abs(liveNoteData.time - ticker.GetPlayTime());
+                var diff = Math.Abs(liveNoteData.time - ticker.GetPlayTime() + 1f);
                 Debug.Log($"{liveNoteData.time}: {diff}s");
-                if (diff <= 0.075f) {
+                if (diff <= 0.1f) {
                     Spawn(liveNoteData, Score.Perfect);
                 } else if (diff <= 0.2f) {
                     Spawn(liveNoteData, Score.Great);
@@ -54,7 +61,6 @@ public class KeyBinder : MonoBehaviour {
                     Spawn(liveNoteData, Score.Miss);
                 }
             }
-            Ticker.Instance.Beat();
         }
     }
 
@@ -62,15 +68,19 @@ public class KeyBinder : MonoBehaviour {
         Debug.Log($"{data.time}, {score.GetTag()}");
         var o = Instantiate(scoreTag, Utils.LocationToCanvas(Utils.Locator(data.note)), Quaternion.identity);
         o.transform.SetParent(Ticker.Instance.canvas.transform, false);
-        o.GetComponent<Text>().text = score.GetTag();
+        var text = o.GetComponent<Text>();
+        text.text = score.GetTag();
+        text.color = score.GetColor();
     }
 
     public void Queue(LiveNoteData data) => StartCoroutine(Enqueue(data));
 
     private IEnumerator Enqueue(LiveNoteData data) {
-        yield return new WaitForSeconds(1.5f);
-        _noteQueue[data.note].Enqueue(data);
         yield return new WaitForSeconds(1f);
-        if (!data.clicked) Spawn(data, Score.Miss);
+        _noteQueue[data.note].Enqueue(data);
+        yield return new WaitForSeconds(0.5f);
+        if (data.clicked) yield break;
+        data.Click();
+        Spawn(data, Score.Miss);
     }
 }

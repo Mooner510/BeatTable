@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ticker : MonoBehaviour {
-    public static Ticker Instance;
-
+public class Ticker : SingleMono<Ticker> {
     private long _tick;
     [SerializeField] private float bpm;
     [SerializeField] private Text beatText;
@@ -17,17 +14,16 @@ public class Ticker : MonoBehaviour {
     public Camera mainCamera;
     private bool _readTick;
     private float _timePerTick;
-    private WaitForSeconds _seconds;
-    private Coroutine _routine;
+    // private WaitForSeconds _seconds;
+    // private Coroutine _routine;
     private float _writeTime;
 
     private void Start() {
-        Instance = this;
         canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
         mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         _tick = 0;
         _timePerTick = 15f / bpm;
-        _seconds = new WaitForSeconds(_timePerTick);
+        // _seconds = new WaitForSeconds(_timePerTick);
     }
 
     public void Beat() {

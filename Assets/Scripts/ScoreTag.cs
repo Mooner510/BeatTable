@@ -9,9 +9,9 @@ public class ScoreTag : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        transform.position += Vector3.up;
+        transform.position += Vector3.up * 1.2f;
         var color = _text.color;
-        color.a -= 0.005f;
+        color.a -= Time.fixedDeltaTime;
         _text.color = color;
         
         if(color.a <= 0) Destroy(gameObject);
