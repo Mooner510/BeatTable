@@ -3,11 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace Data {
-    public class DataLoader {
-        private static DataLoader _init;
-
-        public static DataLoader Instance => _init ??= new DataLoader();
-
+    public static class DataLoader {
         private static List<LiveNoteData> _noteData;
         private static List<NoteData> _writeNoteData = new List<NoteData>();
         private static int _index;
@@ -24,6 +20,8 @@ namespace Data {
         
         public static LiveNoteData Pop() => _noteData[_index++];
 
+        public static int GetNotes() => _noteData.Count;
+
         public static void LoadData() {
             _noteData = new List<LiveNoteData>();
             foreach (var noteData in Json.LoadJsonFile<GlobalNoteData>("data").data) {
@@ -36,16 +34,15 @@ namespace Data {
             Debug.Log(Json.CreateJsonFile("data", new GlobalNoteData(_writeNoteData.ToArray())));
         }
 
-        public void Start() {
+        public static void Start() {
             Debug.Log("Data Start");
-            Ticker.Instance.ResetTick();
             Ticker.Instance.Write();
         }
 
-        public void Stop() {
+        public static void Stop() {
             Debug.Log("Stop and Save");
             Ticker.Instance.StopWrite();
-            SaveData();
+            if(!Player.Instance.IsPlay()) SaveData();
         }
 
         public static void AddNote(int note) {

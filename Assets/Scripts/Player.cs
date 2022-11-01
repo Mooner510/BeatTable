@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using Data;
+using Map;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
     public static Player Instance;
     
-    [SerializeField] public bool isPlay;
+    [SerializeField] private bool isPlay;
     [SerializeField] private GameObject beatInspector;
+
+    private static readonly Color ClickColor = new Color(0f, 0.8f, 0.8f, 0.3f);
 
     private void Start() {
         Instance = this;
@@ -14,23 +17,29 @@ public class Player : MonoBehaviour {
         StartCoroutine(Init());
     }
 
+    public bool IsPlay() => isPlay;
+
+    public void SetPlay(bool play) => isPlay = play;
+
     private static IEnumerator Init() {
         yield return new WaitForSeconds(3);
-        DataLoader.Instance.Start();
+        DataLoader.Start();
     }
 
     public IEnumerator Accept(LiveNoteData note, float time) {
         var colored = false;
         yield return new WaitForSeconds(time);
-        KeyBinder.Instance.Queue(note);
-        var o = Instantiate(beatInspector, Utils.Locator(note.note), Quaternion.identity);
+        KeyListener.Instance.Queue(note);
+        var obj = Instantiate(beatInspector, Utils.Locator(note.note), Quaternion.identity);
+        var spriteRenderer = obj.GetComponent<SpriteRenderer>();
         for (var delta = 0f; delta <= 1.25; delta += Time.deltaTime) {
             yield return null;
-            o.transform.localScale = new Vector3(delta * 2, delta * 2, delta * 2);
+            obj.transform.position = MapMaker.Instance.GetNote(note.note).transform.position;
+            obj.transform.localScale = new Vector3(delta * 2, delta * 2, delta * 2);
             if (colored || !(delta >= 0.9f)) continue;
-            o.transform.GetComponent<SpriteRenderer>().color = new Color(0, 1f, 0, 0.3f);
+            spriteRenderer.color = ClickColor;
             colored = true;
         }
-        Destroy(o);
+        Destroy(obj);
     }
 }
