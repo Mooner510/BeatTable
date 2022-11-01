@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace Data {
     public static class DataLoader {
+        private static string _musicName;
+        
         private static List<LiveNoteData> _noteData;
         private static List<NoteData> _writeNoteData = new List<NoteData>();
         private static int _index;
+
+        public static string GetMusicName() => _musicName;
+
+        public static void SetMusicName(string name) => _musicName = name;
 
         public static List<LiveNoteData> GetNoteData() => _noteData;
 
@@ -24,14 +30,13 @@ namespace Data {
 
         public static void LoadData() {
             _noteData = new List<LiveNoteData>();
-            foreach (var noteData in Json.LoadJsonFile<GlobalNoteData>("data").data) {
+            foreach (var noteData in Json.LoadJsonFile<GlobalNoteData>(_musicName).data) {
                 _noteData.Add(new LiveNoteData(noteData));
             }
-            Debug.Log(string.Join(", ", _noteData));
         }
 
         private static void SaveData() {
-            Debug.Log(Json.CreateJsonFile("data", new GlobalNoteData(_writeNoteData.ToArray())));
+            Json.CreateJsonFile(_musicName, new GlobalNoteData(_writeNoteData.ToArray()));
         }
 
         public static void Start() {

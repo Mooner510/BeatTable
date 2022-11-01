@@ -84,7 +84,7 @@ public class KeyListener : MonoBehaviour {
     private void Spawn(LiveNoteData data, ScoreType score) {
         Debug.Log($"{data.time}, {score.GetTag()}");
         var obj = Instantiate(scoreImage, Utils.LocationToCanvas(Utils.Locator(data.note)), Quaternion.identity);
-        obj.transform.SetParent(Ticker.Instance.canvas.transform, false);
+        obj.transform.SetParent(Utils.Canvas.transform, false);
         obj.sprite = sprites[(int) score];
         Counter.Instance.Count(score);
     }
