@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Data;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,8 +64,8 @@ namespace Musics {
 
             newImage.transform.localPosition = ImageLocation;
             newTitle.transform.localPosition = TitleLocation;
-            Destroy(currentImage);
-            Destroy(currentTitle);
+            Destroy(currentImage.gameObject);
+            Destroy(currentTitle.gameObject);
             _subImage = newImage;
             _subTitle = newTitle;
             _moving = false;
@@ -95,8 +96,8 @@ namespace Musics {
 
             newImage.transform.localPosition = ImageLocation;
             newTitle.transform.localPosition = TitleLocation;
-            Destroy(currentImage);
-            Destroy(currentTitle);
+            Destroy(currentImage.gameObject);
+            Destroy(currentTitle.gameObject);
             _subImage = newImage;
             _subTitle = newTitle;
             _moving = false;
