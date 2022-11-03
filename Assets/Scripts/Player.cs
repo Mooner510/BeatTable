@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Data;
 using Map;
+using Musics.Data;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -13,7 +14,7 @@ public class Player : MonoBehaviour {
 
     private void Start() {
         Instance = this;
-        if (isPlay) DataLoader.LoadData();
+        if (isPlay) NoteManager.LoadCurrentData();
         StartCoroutine(Init());
     }
 
@@ -23,7 +24,7 @@ public class Player : MonoBehaviour {
 
     private static IEnumerator Init() {
         yield return new WaitForSeconds(3);
-        DataLoader.Start();
+        NoteManager.Start();
     }
 
     public IEnumerator Accept(LiveNoteData note, float time) {

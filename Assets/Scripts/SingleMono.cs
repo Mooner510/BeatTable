@@ -35,10 +35,8 @@ public class SingleTon<T> where T : new() {
 
     public static T Instance {
         get {
-            if (_init != null)
-                return _init;
-            _init = new T();
-            return _init;
+            if (_init != null) return _init;
+            return _init = new T();
         }
     }
 }

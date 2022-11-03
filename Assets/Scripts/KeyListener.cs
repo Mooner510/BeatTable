@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Data;
 using Map;
+using Musics.Data;
 using Score;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,19 +31,19 @@ public class KeyListener : MonoBehaviour {
 
     public void Update() {
         if (!Player.Instance.IsPlay() && Input.GetKey(KeyCode.Backspace)) {
-            DataLoader.Stop();
+            NoteManager.Stop();
             return;
         }
 
         // if (Input.GetKey(KeyCode.Q)) {
-        //     DataLoader.Stop();
+        //     NoteManager.Stop();
         //     Player.Instance.SetPlay(!Player.Instance.IsPlay());
         //     return;
         // }
         
         // if (Input.GetKey(KeyCode.R)) {
-        //     DataLoader.Stop();
-        //     DataLoader.
+        //     NoteManager.Stop();
+        //     NoteManager.
         //     return;
         // }
 
@@ -53,7 +54,7 @@ public class KeyListener : MonoBehaviour {
             MapMaker.Instance.Click(i);
             Ticker.Instance.Beat();
             if (!Player.Instance.IsPlay()) {
-                DataLoader.AddNote(i);
+                NoteManager.AddNote(i);
             } else {
                 LiveNoteData liveNoteData = null;
                 while (_noteQueue[i].Count > 0 && liveNoteData == null) {
