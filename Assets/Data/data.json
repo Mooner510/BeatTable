@@ -22,6 +22,12 @@
       "bpm": 142.5,
       "minute": 1,
       "second": 25
+    },
+    {
+      "name": "WTF",
+      "artist": "HUGEL",
+      "minute": 2,
+      "second": 42
     }
   ]
 }

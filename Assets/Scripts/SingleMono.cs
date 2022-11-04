@@ -23,11 +23,11 @@ public class SingleMono<T> : MonoBehaviour where T : MonoBehaviour {
         }
     }
 
-    protected void Awake() {
-        if (_init == null) _init = this as T;
-        else if (_init != this) Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
-    }
+    // protected void Awake() {
+    //     if (_init == null) _init = this as T;
+    //     else if (_init != this) Destroy(gameObject);
+    //     DontDestroyOnLoad(gameObject);
+    // }
 }
 
 public class SingleTon<T> where T : new() {

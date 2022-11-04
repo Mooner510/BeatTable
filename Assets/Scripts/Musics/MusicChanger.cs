@@ -9,8 +9,8 @@ using Utils;
 namespace Musics {
     public class MusicChanger : SingleMono<MusicChanger> {
         [SerializeField] private Image image;
-        [SerializeField] private Image backgroundImage;
         [SerializeField] private Text title;
+        [SerializeField] private Image backgroundImage;
         [SerializeField] private Text left;
         [SerializeField] private Text right;
         [SerializeField] private Text artist;
@@ -62,14 +62,18 @@ namespace Musics {
                 .Append(suggestion2.transform.DOScale(Vector3.one, 1).SetEase(Ease.OutCubic));
 
             var musicData = MusicManager.Instance.GetCurrentMusicData();
-
+            
             _subImage = Instantiate(image, ImageLocation, Quaternion.identity);
-            _subImage.transform.SetParent(GameUtils.Canvas.transform, false);
-            _subImage.sprite = musicData.image;
+            if (_subImage.transform != null) {
+                _subImage.transform.SetParent(GameUtils.Canvas.transform, false);
+                _subImage.sprite = musicData.image;
+            }
 
             _subTitle = Instantiate(title, TitleLocation, Quaternion.identity);
-            _subTitle.transform.SetParent(GameUtils.Canvas.transform, false);
-            _subTitle.text = musicData.name;
+            if (_subTitle != null) {
+                _subTitle.transform.SetParent(GameUtils.Canvas.transform, false);
+                _subTitle.text = musicData.name;
+            }
 
             TextUpdate(null, null, null, null, false, musicData);
         }

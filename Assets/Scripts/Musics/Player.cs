@@ -25,6 +25,22 @@ namespace Musics {
             StartCoroutine(Init());
         }
 
+        public void Stop() {
+            StopCoroutine(Init());
+            StartCoroutine(End());
+        }
+
+        private IEnumerator End() {
+            var color = hider.color;
+            for (var i = 0f; i <= 3; i += Time.deltaTime) {
+                color.a = i / 3;
+                hider.color = color;
+                yield return null;
+            }
+            hider.color = Color.black;
+            SceneManager.LoadScene(2);
+        }
+
         private IEnumerator Init() {
             var color = hider.color;
             for (var i = 0f; i <= 3; i += Time.deltaTime) {
@@ -37,13 +53,7 @@ namespace Musics {
             NoteManager.Start();
             var data = MusicManager.Instance.GetCurrentMusicData();
             yield return new WaitForSecondsRealtime(data.minute * 60 + data.second + 1);
-            for (var i = 0f; i <= 3; i += Time.deltaTime) {
-                color.a = i / 3;
-                hider.color = color;
-                yield return null;
-            }
-            hider.color = Color.black;
-            SceneManager.LoadScene(2);
+            StartCoroutine(End());
         }
 
         public IEnumerator Accept(LiveNoteData note, float time) {

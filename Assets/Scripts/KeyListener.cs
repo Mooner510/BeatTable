@@ -50,16 +50,16 @@ public class KeyListener : MonoBehaviour {
     }
 
     public void Update() {
-        if (!MusicManager.Instance.IsPlayMode() && Input.GetKey(KeyCode.Backspace)) {
+        if (!MusicManager.Instance.IsPlayMode() && Input.GetKeyDown(KeyCode.Backspace)) {
             NoteManager.Stop();
             return;
         }
 
-        // if (Input.GetKey(KeyCode.Q)) {
-        //     NoteManager.Stop();
-        //     Player.Instance.SetPlay(!Player.Instance.IsPlay());
-        //     return;
-        // }
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            NoteManager.Stop();
+            Player.Instance.Stop();
+            return;
+        }
         
         // if (Input.GetKey(KeyCode.R)) {
         //     NoteManager.Stop();

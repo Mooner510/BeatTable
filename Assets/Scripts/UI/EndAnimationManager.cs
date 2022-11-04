@@ -47,9 +47,8 @@ namespace UI {
                         newRecord.color = GameUtils.ClearWhite;
                         rank.transform.localScale = Vector3.one * 2f;
                     })
-                    .Append(rank.DOFade(1, 3).SetEase(Ease.OutCubic))
+                    .Join(rank.DOFade(1, 3).SetEase(Ease.OutCubic))
                     .Join(rank.transform.DOScale(1, 3).SetEase(Ease.OutCubic))
-                    .SetDelay(2f)
                     .Play();
             }
             image.sprite = musicData.image;
