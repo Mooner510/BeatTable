@@ -9,7 +9,7 @@ namespace UI {
         }
 
         private void FixedUpdate() {
-            transform.position += Vector3.up * 1.2f;
+            transform.localPosition += Vector3.up;
             var color = _image.color;
             color.a -= Time.fixedDeltaTime * 1.5f;
             _image.color = color;
