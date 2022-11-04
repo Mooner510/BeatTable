@@ -13,10 +13,10 @@ public static class Json {
 
     public static T LoadJsonFile<T>(string fileName) {
         var fileStream = new FileStream($"{fileName}.json", FileMode.Open);
-        var data = new byte[fileStream.Length]; 
-        fileStream.Read(data, 0, data.Length);
+        var reader = new StreamReader(fileStream);
+        var jsonData = reader.ReadToEnd();
+        reader.Close();
         fileStream.Close();
-        var jsonData = Encoding.UTF8.GetString(data);
         return JsonUtility.FromJson<T>(jsonData);
     }
 }

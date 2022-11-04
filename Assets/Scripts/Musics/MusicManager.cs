@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
-using UnityEngine;
 
 namespace Musics {
     public class MusicManager : SingleTon<MusicManager> {
@@ -12,9 +10,9 @@ namespace Musics {
 
         public MusicManager() => Load();
 
-        [CanBeNull] public MusicData Next() => IsLast() ? null : _musicDataList[++_selection];
-        
-        [CanBeNull] public MusicData Back() => IsFirst() ? null : _musicDataList[--_selection];
+        public MusicData Next() => IsLast() ? _musicDataList[_selection = 0] : _musicDataList[++_selection];
+
+        public MusicData Back() => IsFirst() ? _musicDataList[_selection = _musicDataList.Count - 1] : _musicDataList[--_selection];
 
         public bool IsLast() => _selection >= _musicDataList.Count - 1;
 
@@ -22,7 +20,8 @@ namespace Musics {
 
         private void Load() {
             _selection = 0;
-            _musicDataList = new List<MusicData>(from info in Json.LoadJsonFile<MusicList>("Assets/Data/data").musics select info.ToMusicData());
+            var musics = Json.LoadJsonFile<MusicList>("Assets/Data/data");
+            _musicDataList = new List<MusicData>(from info in musics.musics select info.ToMusicData());
         }
     }
 }

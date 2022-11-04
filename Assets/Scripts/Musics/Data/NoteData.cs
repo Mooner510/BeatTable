@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Data {
+namespace Musics.Data {
     [Serializable]
     public class GlobalNoteData {
         public NoteData[] data;

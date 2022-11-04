@@ -2,16 +2,21 @@
   "musics": [
     {
       "name": "Yoru ni Kakeru",
+      "artist": "YOASOBI",
+      "arrange": "Mooner510",
       "minute": 2,
       "second": 29
     },
     {
       "name": "Kaibutsu",
+      "artist": "YOASOBI",
+      "arrange": "Mooner510",
       "minute": 2,
       "second": 54
     },
     {
       "name": "Soft Icecream",
+      "artist": "Mooner510",
       "minute": 1,
       "second": 25
     }
