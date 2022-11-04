@@ -1,14 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Utils {
     public static class GameUtils {
+        public static readonly Color ClearWhite = new Color(1, 1, 1, 0);
     
         public static Vector2 Locator(int n) => new Vector2(-3 + 3 * (n % 3), 3 - 3 * (n / 3));
 
         private static RectTransform _canvas;
 
-        public static RectTransform Canvas => _canvas ??= GameObject.Find("Canvas").GetComponent<RectTransform>();
-    
+        public static RectTransform Canvas {
+            get {
+                try {
+                    return _canvas ??= GameObject.Find("Canvas").GetComponent<RectTransform>();
+                } catch (MissingReferenceException) {
+                    return _canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+                }
+            }
+        }
+
         public static Vector2 LocationToCanvas(Vector2 vector) {
             if (Camera.main == null) return new Vector2();
             Vector2 viewPosition = Camera.main.WorldToViewportPoint(vector);

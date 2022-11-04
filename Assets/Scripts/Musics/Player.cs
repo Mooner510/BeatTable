@@ -2,6 +2,8 @@
 using Map;
 using Musics.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Utils;
 
 namespace Musics {
@@ -9,18 +11,39 @@ namespace Musics {
         public static Player Instance;
     
         [SerializeField] private GameObject beatInspector;
+        [SerializeField] private SpriteRenderer hider;
+        [SerializeField] private Text recording;
 
         private static readonly Color ClickColor = new Color(0f, 0.8f, 0.8f, 0.3f);
 
         private void Start() {
             Instance = this;
-            if (MusicManager.Instance.IsPlayMode()) NoteManager.LoadCurrentData();
+            if (MusicManager.Instance.IsPlayMode()) {
+                NoteManager.LoadCurrentData();
+                recording.enabled = false;
+            } else recording.enabled = true;
             StartCoroutine(Init());
         }
 
-        private static IEnumerator Init() {
-            yield return new WaitForSeconds(3);
+        private IEnumerator Init() {
+            var color = hider.color;
+            for (var i = 0f; i <= 3; i += Time.deltaTime) {
+                color.a = 1 - i / 3;
+                hider.color = color;
+                yield return null;
+            }
+            hider.color = Color.clear;
+            yield return new WaitForSecondsRealtime(1);
             NoteManager.Start();
+            var data = MusicManager.Instance.GetCurrentMusicData();
+            yield return new WaitForSecondsRealtime(data.minute * 60 + data.second + 1);
+            for (var i = 0f; i <= 3; i += Time.deltaTime) {
+                color.a = i / 3;
+                hider.color = color;
+                yield return null;
+            }
+            hider.color = Color.black;
+            SceneManager.LoadScene(2);
         }
 
         public IEnumerator Accept(LiveNoteData note, float time) {

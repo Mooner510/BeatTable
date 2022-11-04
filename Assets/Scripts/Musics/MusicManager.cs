@@ -8,6 +8,8 @@ namespace Musics {
         private List<MusicData> _musicDataList;
         private bool _isPlayMode;
 
+        public int GetCurrentMusicId() => _selection;
+
         public MusicData GetCurrentMusicData() => _musicDataList[_selection];
 
         public MusicManager() => Load();

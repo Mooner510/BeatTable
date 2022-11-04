@@ -5,15 +5,21 @@ using UnityEngine.UI;
 
 namespace Score {
     public class Counter : SingleMono<Counter> {
+        private static int _combo;
+        private static double _score;
+        private static int _total;
+        private static int[] _data;
+
+        public static int GetCombo() => _combo;
+        public static double GetScore() => _score;
+        public static int GetTotal() => _total;
+        public static int GetData(ScoreType scoreType) => _data[(int) scoreType];
+
         [SerializeField] private Text comboText;
         [SerializeField] private Text scoreText;
         [SerializeField] private Text perfectText;
         // [SerializeField] private Text[] texts;
-        private int _combo;
-        private double _score;
-        private int _total;
         private int[] _beforeSize;
-        private int[] _data;
 
         public void Start() {
             _score = 0d;
@@ -34,7 +40,7 @@ namespace Score {
             text.transform.localScale = Vector3.one;
         }
 
-        public void Count(ScoreType scoreType) {
+        public double Count(ScoreType scoreType) {
             _total++;
             var value = (int) scoreType;
             
@@ -44,9 +50,10 @@ namespace Score {
             _data[(int) scoreType]++;
             comboText.text = _combo > 0 ? $"{_combo}" : "";
             
-            if(scoreType == ScoreType.Miss) return;
-            scoreText.text = $"{_score += scoreType.GetBaseScore() * (1 + _combo / 50d):n0}";
-            perfectText.text = $"{_data[0] * 100f / _total:F2}%";
+            if(scoreType == ScoreType.Miss) return 0;
+            var baseScore = scoreType.GetBaseScore() * (1 + _combo / 50d);
+            scoreText.text = $"{_score += baseScore:n0}";
+            perfectText.text = $"{_data[0] * 100f / _total:n0}%";
             
             StopCoroutine(Sizing(comboText, 0));
             StartCoroutine(Sizing(comboText, 0));
@@ -59,6 +66,7 @@ namespace Score {
 
             StopCoroutine(MapMaker.Instance.Beat());
             StartCoroutine(MapMaker.Instance.Beat());
+            return baseScore;
         }
     }
 }

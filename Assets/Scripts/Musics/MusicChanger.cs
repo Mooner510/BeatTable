@@ -58,7 +58,7 @@ namespace Musics {
             _canStart = false;
             _clickSequence = DOTween.Sequence()
                 .SetAutoKill(false)
-                .OnStart(() => { suggestion2.transform.localScale = Vector3.one * 1.2f; })
+                .OnStart(() => suggestion2.transform.localScale = Vector3.one * 1.2f)
                 .Append(suggestion2.transform.DOScale(Vector3.one, 1).SetEase(Ease.OutCubic));
 
             var musicData = MusicManager.Instance.GetCurrentMusicData();
