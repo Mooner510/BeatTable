@@ -21,7 +21,7 @@ namespace Score {
             _data = new int[5];
             comboText.text = "";
             scoreText.text = "0";
-            perfectText.text = "100%";
+            perfectText.text = "100.00%";
             _beforeSize = new[] {comboText.fontSize, scoreText.fontSize, perfectText.fontSize};
         }
 
