@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Musics.Data;
 using UnityEngine;
+using Utils;
 
 namespace Musics {
     [Serializable]
@@ -18,6 +19,7 @@ namespace Musics {
         public string name;
         public string artist;
         public string arrange;
+        public float bpm;
         public int minute;
         public int second;
 
@@ -29,7 +31,7 @@ namespace Musics {
             this.second = second;
         }
 
-        public MusicData ToMusicData() => new MusicData(name, artist, arrange, minute, second);
+        public MusicData ToMusicData() => new MusicData(name, artist, arrange, bpm, minute, second);
     }
 
     [Serializable]
@@ -37,6 +39,7 @@ namespace Musics {
         public string name;
         public string artist;
         public string arrange;
+        public float bpm;
         public int minute;
         public int second;
         public NoteData[] noteData;
@@ -44,10 +47,11 @@ namespace Musics {
         public AudioClip titleAudio;
         public Sprite image;
 
-        public MusicData(string name, string artist, string arrange, int minute, int second) {
+        public MusicData(string name, string artist, string arrange, float bpm, int minute, int second) {
             this.name = name;
             this.artist = artist;
             this.arrange = arrange;
+            this.bpm = bpm;
             this.minute = minute;
             this.second = second;
             try {

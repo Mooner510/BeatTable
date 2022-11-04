@@ -4,6 +4,7 @@
       "name": "Yoru ni Kakeru",
       "artist": "YOASOBI",
       "arrange": "Mooner510",
+      "bpm": 127.5,
       "minute": 2,
       "second": 29
     },
@@ -11,12 +12,14 @@
       "name": "Kaibutsu",
       "artist": "YOASOBI",
       "arrange": "Mooner510",
+      "bpm": 169.95,
       "minute": 2,
       "second": 54
     },
     {
       "name": "Soft Icecream",
       "artist": "Mooner510",
+      "bpm": 142.5,
       "minute": 1,
       "second": 25
     }

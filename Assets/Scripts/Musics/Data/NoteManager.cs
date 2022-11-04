@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utils;
 
 namespace Musics.Data {
     public static class NoteManager {
@@ -30,9 +31,8 @@ namespace Musics.Data {
         public static void Stop() {
             Debug.Log("Stop and Save");
             Ticker.Instance.StopWrite();
-            if (Player.Instance.IsPlay()) return;
+            if (MusicManager.Instance.IsPlayMode()) return;
             SaveData();
-            _writeNoteData = new List<NoteData>();
         }
 
         public static void AddNote(int note) {

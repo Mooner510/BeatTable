@@ -16,7 +16,7 @@ TagManager:
   - 
   - 
   - Text
-  - 
+  - Hider
   - 
   - 
   - 
@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Hider
+    uniqueID: 4267335353
+    locked: 0
   - name: Text
     uniqueID: 1587795495
     locked: 0

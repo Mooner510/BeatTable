@@ -6,12 +6,12 @@ public class SingleMono<T> : MonoBehaviour where T : MonoBehaviour {
 
     public static T Instance {
         get {
-            lock (Sync)  
-            {
+            lock (Sync) {
                 if (_init != null) return _init;
                 var objects = FindObjectsOfType<T>();
                 if (objects.Length > 0) _init = objects[0];
-                else if (objects.Length > 1) Debug.LogError("There is more than one " + typeof(T).Name + " in the scene.");
+                else if (objects.Length > 1)
+                    Debug.LogError("There is more than one " + typeof(T).Name + " in the scene.");
 
                 if (_init != null) return _init;
                 var objectName = typeof(T).ToString();

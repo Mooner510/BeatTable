@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Map;
+using Musics;
 using Musics.Data;
 using Score;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 public class KeyListener : MonoBehaviour {
     public static KeyListener Instance;
@@ -29,7 +31,7 @@ public class KeyListener : MonoBehaviour {
     }
 
     public void Update() {
-        if (!Player.Instance.IsPlay() && Input.GetKey(KeyCode.Backspace)) {
+        if (!MusicManager.Instance.IsPlayMode() && Input.GetKey(KeyCode.Backspace)) {
             NoteManager.Stop();
             return;
         }
@@ -52,7 +54,7 @@ public class KeyListener : MonoBehaviour {
             // Debug.Log($"id: {i}");
             MapMaker.Instance.Click(i);
             Ticker.Instance.Beat();
-            if (!Player.Instance.IsPlay()) {
+            if (!MusicManager.Instance.IsPlayMode()) {
                 NoteManager.AddNote(i);
             } else {
                 LiveNoteData liveNoteData = null;
@@ -83,8 +85,8 @@ public class KeyListener : MonoBehaviour {
 
     private void Spawn(LiveNoteData data, ScoreType score) {
         Debug.Log($"{data.time}, {score.GetTag()}");
-        var obj = Instantiate(scoreImage, Utils.LocationToCanvas(Utils.Locator(data.note)), Quaternion.identity);
-        obj.transform.SetParent(Utils.Canvas.transform, false);
+        var obj = Instantiate(scoreImage, GameUtils.LocationToCanvas(GameUtils.Locator(data.note)), Quaternion.identity);
+        obj.transform.SetParent(GameUtils.Canvas.transform, false);
         obj.sprite = sprites[(int) score];
         Counter.Instance.Count(score);
     }
