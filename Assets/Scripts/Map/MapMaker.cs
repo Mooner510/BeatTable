@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Utils;
 
 namespace Map {
     public class MapMaker : SingleMono<MapMaker> {
@@ -14,7 +15,7 @@ namespace Map {
             _noteRenderers = new SpriteRenderer[9];
             _routines = new Coroutine[9];
             for (var i = 0; i < 9; i++) {
-                _noteRenderers[i] = (_notes[i] = Instantiate(beatButton, Utils.Locator(i), Quaternion.identity))
+                _noteRenderers[i] = (_notes[i] = Instantiate(beatButton, GameUtils.Locator(i), Quaternion.identity))
                     .GetComponent<SpriteRenderer>();
             }
         }
@@ -38,7 +39,7 @@ namespace Map {
         public IEnumerator Beat() {
             for (var time = 0f; time <= 0.5f; time += Time.deltaTime) {
                 for (var i = 0; i < 9; i++) {
-                    var pos = Utils.Locator(i);
+                    var pos = GameUtils.Locator(i);
                     _notes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
                     _notes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) / 3);
                 }
