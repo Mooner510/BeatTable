@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/InGame.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/InGame-Quad.unity
+    guid: d3251d6009b2c49489bf24d20d1dfa57
+  - enabled: 1
     path: Assets/Scenes/End.unity
     guid: b4276bafa350e044ea236052af416b9b
   m_configObjects: {}

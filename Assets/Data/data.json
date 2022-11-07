@@ -6,7 +6,8 @@
       "arrange": "Mooner510",
       "bpm": 127.5,
       "minute": 2,
-      "second": 29
+      "second": 29,
+      "gameMode": "Keypad"
     },
     {
       "name": "Kaibutsu",
@@ -14,20 +15,30 @@
       "arrange": "Mooner510",
       "bpm": 169.95,
       "minute": 2,
-      "second": 54
+      "second": 54,
+      "gameMode": "Keypad"
     },
     {
       "name": "Soft Icecream",
       "artist": "Mooner510",
       "bpm": 142.5,
       "minute": 1,
-      "second": 25
+      "second": 25,
+      "gameMode": "Keypad"
     },
     {
       "name": "WTF",
       "artist": "HUGEL",
       "minute": 2,
-      "second": 42
+      "second": 42,
+      "gameMode": "Keypad"
+    },
+    {
+      "name": "La La Rasputin",
+      "artist": "Boney M.",
+      "minute": 3,
+      "second": 58,
+      "gameMode": "Quad"
     }
   ]
 }

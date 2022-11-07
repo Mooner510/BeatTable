@@ -28,6 +28,8 @@ namespace UI {
 
         private void Start() {
             newRecord.enabled = false;
+            rank.enabled = false;
+            rank.color = GameUtils.ClearWhite;
             SetUp();
             StartCoroutine(Animation());
             button.onClick.AddListener(() => SceneManager.LoadScene(0));
@@ -73,7 +75,7 @@ namespace UI {
             var totalCount = Counter.GetTotal();
             var currentScore = (float) Counter.GetScore();
             var final = (perfectCount + greatCount * 0.75f + goodCount * 0.35f + badCount * 0.1f) * 10 / Counter.GetTotal();
-            var finalIndex = Math.Max((int) Math.Round(final), 9);
+            var finalIndex = Math.Min((int) Math.Round(final), 9);
             var increases = new[] {
                 perfectCount / 2f,
                 greatCount / 2f,
@@ -102,11 +104,9 @@ namespace UI {
                 finalPercent.text = $"{values[7] += increases[7] * delta:n2}%";
                 yield return null;
             }
+            rank.enabled = true;
             DOTween.Sequence()
-                .OnStart(() => {
-                    rank.color = GameUtils.ClearWhite;
-                    rank.transform.localScale = Vector3.one * 1.5f;
-                })
+                .OnStart(() => rank.transform.localScale = Vector3.one * 1.5f)
                 .Append(rank.DOFade(1, 2).SetEase(Ease.OutCubic))
                 .Join(rank.transform.DOScale(1, 2).SetEase(Ease.OutCubic))
                 .Play();

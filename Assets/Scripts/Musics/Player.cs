@@ -38,7 +38,7 @@ namespace Musics {
                 yield return null;
             }
             hider.color = Color.black;
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(3);
         }
 
         private IEnumerator Init() {
@@ -62,10 +62,10 @@ namespace Musics {
             KeyListener.Instance.Queue(note);
             var obj = Instantiate(beatInspector, GameUtils.Locator(note.note), Quaternion.identity);
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
-            for (var delta = 0f; delta <= 1.25; delta += Time.deltaTime) {
+            for (var delta = 0f; delta <= 0.625f; delta += Time.deltaTime) {
                 yield return null;
                 obj.transform.position = MapMaker.Instance.GetNote(note.note).transform.position;
-                obj.transform.localScale = new Vector3(delta * 2, delta * 2, delta * 2);
+                obj.transform.localScale = new Vector3(delta * 4, delta * 4, delta * 4);
                 if (colored || !(delta >= 0.9f)) continue;
                 spriteRenderer.color = ClickColor;
                 colored = true;

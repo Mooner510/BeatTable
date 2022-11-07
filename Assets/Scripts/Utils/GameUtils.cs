@@ -9,21 +9,12 @@ namespace Utils {
 
         private static RectTransform _canvas;
 
-        public static RectTransform Canvas {
-            get {
-                try {
-                    return _canvas ??= GameObject.Find("Canvas").GetComponent<RectTransform>();
-                } catch (MissingReferenceException) {
-                    return _canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
-                }
-            }
-        }
+        public static RectTransform Canvas => _canvas == null ? _canvas = GameObject.Find("Canvas").GetComponent<RectTransform>() : _canvas;
 
         public static Vector2 LocationToCanvas(Vector2 vector) {
             if (Camera.main == null) return new Vector2();
             Vector2 viewPosition = Camera.main.WorldToViewportPoint(vector);
-            if (_canvas == null) _canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
-            var delta = _canvas.sizeDelta;
+            var delta = Canvas.sizeDelta;
             return new Vector2(viewPosition.x * delta.x - delta.x / 2, viewPosition.y * delta.y - delta.y / 2);
         }
     

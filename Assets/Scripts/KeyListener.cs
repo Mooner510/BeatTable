@@ -115,7 +115,7 @@ public class KeyListener : MonoBehaviour {
 
     private IEnumerator Enqueue(LiveNoteData data) {
         _noteQueue[data.note].Enqueue(data);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         if (data.clicked) yield break;
         data.Click();
         Spawn(data, ScoreType.Miss);

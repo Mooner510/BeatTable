@@ -44,9 +44,9 @@ namespace Musics {
             var i = 0;
             do {
                 var note = NoteManager.Pick(i);
-                if (note.time <= now + 1) {
+                if (note.time <= now + 0.5f) {
                     // Debug.Log($"Tick: {note.time}");
-                    StartCoroutine(Player.Instance.Accept(NoteManager.Pop(), note.time - (now + 1)));
+                    StartCoroutine(Player.Instance.Accept(NoteManager.Pop(), note.time - (now + 0.5f)));
                 } else break;
             } while (!NoteManager.IsTop(++i));
         }

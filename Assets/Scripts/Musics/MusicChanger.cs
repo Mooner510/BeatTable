@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using JetBrains.Annotations;
+using Musics.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,6 +23,7 @@ namespace Musics {
         [SerializeField] private Text durationInfo;
         [SerializeField] private Text suggestion1;
         [SerializeField] private Text suggestion2;
+        [SerializeField] private Text suggestion3;
         [SerializeField] private SpriteRenderer hider;
         [SerializeField] private AudioSource audioPlayer;
 
@@ -37,6 +40,7 @@ namespace Musics {
         private const float TextOut = UIOut + 138.76f;
         private const float Suggest1Out = -300f;
         private const float Suggest2Out = Suggest1Out - 22f;
+        private const float Suggest3Out = Suggest2Out - 17f;
         private const float TitleOut = Suggest1Out + 35f;
         private const float LeftOut = -440f;
         private const float RightOut = 420f;
@@ -65,13 +69,13 @@ namespace Musics {
             
             _subImage = Instantiate(image, ImageLocation, Quaternion.identity);
             if (_subImage.transform != null) {
-                _subImage.transform.SetParent(GameUtils.Canvas.transform, false);
+                _subImage.transform.SetParent(GameUtils.Canvas, false);
                 _subImage.sprite = musicData.image;
             }
 
             _subTitle = Instantiate(title, TitleLocation, Quaternion.identity);
             if (_subTitle != null) {
-                _subTitle.transform.SetParent(GameUtils.Canvas.transform, false);
+                _subTitle.transform.SetParent(GameUtils.Canvas, false);
                 _subTitle.text = musicData.name;
             }
 
@@ -96,7 +100,7 @@ namespace Musics {
             if (currentTitle != null)
                 currentTitle.transform.DOLocalMove(isLeft ? RightTitleLocation : LeftTitleLocation, 1f)
                     .SetEase(Ease.OutCubic);
-            backgroundImage.sprite = musicData.image;
+            backgroundImage.sprite = musicData.blurImage;
 
             artist.text = musicData.artist;
             if (musicData.arrange == null) {
@@ -110,12 +114,12 @@ namespace Musics {
 
             duration.text = $"{musicData.minute}:{musicData.second}";
             if (musicData.noteData == null || musicData.noteData.Length <= 0) {
-                suggestion1.text = "Press R to Record";
+                suggestion1.text = "Press R to Keypad Mode Record";
                 suggestion2.text = "This music doesn't have note map!";
                 _canStart = false;
             } else {
                 suggestion1.text = "Press Q to Start";
-                suggestion2.text = "Or Press R to Record";
+                suggestion2.text = "Or Press R to Keypad Mode Record";
                 _canStart = true;
             }
 
@@ -164,7 +168,7 @@ namespace Musics {
             Destroy(currentTitle.gameObject);
         }
 
-        private IEnumerator StartMusic() {
+        private IEnumerator StartMusic(GameMode gameMode) {
             artistInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             arrangeInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             durationInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
@@ -173,6 +177,7 @@ namespace Musics {
             duration.transform.DOLocalMoveX(TextOut, 2).SetEase(Ease.OutCubic);
             suggestion1.transform.DOLocalMoveY(Suggest1Out, 2).SetEase(Ease.OutCubic);
             suggestion2.transform.DOLocalMoveY(Suggest2Out, 2).SetEase(Ease.OutCubic);
+            suggestion3.transform.DOLocalMoveY(Suggest3Out, 2).SetEase(Ease.OutCubic);
             left.transform.DOLocalMoveX(LeftOut, 2).SetEase(Ease.OutCubic);
             right.transform.DOLocalMoveX(RightOut, 2).SetEase(Ease.OutCubic);
             _subImage.transform.DOLocalMove(Vector3.zero, 3).SetEase(Ease.OutCubic);
@@ -182,7 +187,16 @@ namespace Musics {
             yield return new WaitForSecondsRealtime(1);
             hider.DOColor(Color.black, 2).SetEase(Ease.OutCubic);
             yield return new WaitForSecondsRealtime(3);
-            SceneManager.LoadScene(1);
+            switch (gameMode) {
+                case GameMode.Keypad:
+                    SceneManager.LoadScene(1);
+                    break;
+                case GameMode.Quad:
+                    SceneManager.LoadScene(2);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(gameMode), gameMode, null);
+            }
         }
 
         private void Update() {
@@ -198,12 +212,16 @@ namespace Musics {
                     return;
                 }
                 MusicManager.Instance.SetPlayMode(true);
-                StopCoroutine(StartMusic());
-                StartCoroutine(StartMusic());
+                StopCoroutine(StartMusic(GameMode.Keypad));
+                StartCoroutine(StartMusic(GameMode.Keypad));
             } else if (Input.GetKeyDown(KeyCode.R)) {
                 MusicManager.Instance.SetPlayMode(false);
-                StopCoroutine(StartMusic());
-                StartCoroutine(StartMusic());
+                StopCoroutine(StartMusic(GameMode.Keypad));
+                StartCoroutine(StartMusic(GameMode.Keypad));
+            } else if (Input.GetKeyDown(KeyCode.E)) {
+                MusicManager.Instance.SetPlayMode(false);
+                StopCoroutine(StartMusic(GameMode.Quad));
+                StartCoroutine(StartMusic(GameMode.Quad));
             }
         }
     }
