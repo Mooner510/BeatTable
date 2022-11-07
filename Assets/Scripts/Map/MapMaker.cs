@@ -1,47 +1,49 @@
 ﻿using System.Collections;
+using Musics;
+using Musics.Data;
 using UnityEngine;
 using Utils;
 
 namespace Map {
     public class MapMaker : SingleMono<MapMaker> {
-        private GameObject[] _notes;
-        private SpriteRenderer[] _noteRenderers;
-        [SerializeField] private GameObject beatButton;
+        protected GameObject[] Notes;
+        protected SpriteRenderer[] NoteRenderers;
+        [SerializeField] protected GameObject beatButton;
 
-        private Coroutine[] _routines;
+        protected Coroutine[] Routines;
 
         private void Start() {
-            _notes = new GameObject[9];
-            _noteRenderers = new SpriteRenderer[9];
-            _routines = new Coroutine[9];
+            Notes = new GameObject[9];
+            NoteRenderers = new SpriteRenderer[9];
+            Routines = new Coroutine[9];
             for (var i = 0; i < 9; i++) {
-                _noteRenderers[i] = (_notes[i] = Instantiate(beatButton, GameUtils.Locator(i), Quaternion.identity))
+                NoteRenderers[i] = (Notes[i] = Instantiate(beatButton, GameUtils.Locator(GameMode.Keypad, i), Quaternion.identity))
                     .GetComponent<SpriteRenderer>();
             }
         }
 
-        public GameObject GetNote(int index) => _notes[index];
+        public GameObject GetNote(int index) => Notes[index];
 
         public void Click(int note) {
-            if(_routines[note] != null) StopCoroutine(_routines[note]);
-            _routines[note] = StartCoroutine(Clicking(note));
+            if(Routines[note] != null) StopCoroutine(Routines[note]);
+            Routines[note] = StartCoroutine(Clicking(note));
         }
 
         private IEnumerator Clicking(int note) {
-            _noteRenderers[note].color = Color.yellow;
+            NoteRenderers[note].color = Color.yellow;
             for (var i = 0f; i <= 0.5f; i += Time.deltaTime) {
                 yield return null;
-                _noteRenderers[note].color = Color.yellow + (Color.white - Color.yellow) * i * 2;
+                NoteRenderers[note].color = Color.yellow + (Color.white - Color.yellow) * i * 2;
             }
-            _noteRenderers[note].color = Color.white;
+            NoteRenderers[note].color = Color.white;
         }
 
-        public IEnumerator Beat() {
+        public virtual IEnumerator Beat() {
             for (var time = 0f; time <= 0.5f; time += Time.deltaTime) {
                 for (var i = 0; i < 9; i++) {
-                    var pos = GameUtils.Locator(i);
-                    _notes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
-                    _notes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) / 3);
+                    var pos = GameUtils.Locator(MusicManager.Instance.GetCurrentMusicData().gameMode, i);
+                    Notes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
+                    Notes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) / 3);
                 }
                 yield return null;
             }

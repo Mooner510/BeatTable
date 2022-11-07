@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Musics.Data;
 using UnityEngine;
 
 namespace Utils {
     public static class GameUtils {
         public static readonly Color ClearWhite = new Color(1, 1, 1, 0);
     
-        public static Vector2 Locator(int n) => new Vector2(-3 + 3 * (n % 3), 3 - 3 * (n / 3));
+        public static Vector2 Locator(GameMode gameMode, int n) => gameMode == GameMode.Keypad ?
+            new Vector2(-3 + 3 * (n % 3), 3 - 3 * (n / 3)) :
+            // ReSharper disable once PossibleLossOfFraction
+            new Vector2(-1.25f + 2.5f * (n % 2), -1.25f + 2.5f * (n / 2));
 
         private static RectTransform _canvas;
 

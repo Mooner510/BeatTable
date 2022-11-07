@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Listener;
 using Map;
 using Musics.Data;
 using UnityEngine;
@@ -60,7 +61,7 @@ namespace Musics {
             var colored = false;
             yield return new WaitForSeconds(time);
             KeyListener.Instance.Queue(note);
-            var obj = Instantiate(beatInspector, GameUtils.Locator(note.note), Quaternion.identity);
+            var obj = Instantiate(beatInspector, GameUtils.Locator(MusicManager.Instance.GetCurrentMusicData().gameMode, note.note), Quaternion.identity);
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
             for (var delta = 0f; delta <= 0.625f; delta += Time.deltaTime) {
                 yield return null;

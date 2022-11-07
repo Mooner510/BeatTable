@@ -1666,7 +1666,7 @@ MonoBehaviour:
   durationInfo: {fileID: 1349008957}
   suggestion1: {fileID: 1247938642}
   suggestion2: {fileID: 781911617}
-  suggestion3: {fileID: 0}
+  suggestion3: {fileID: 1488374165}
   hider: {fileID: 523813710}
   audioPlayer: {fileID: 1784876514}
 --- !u!4 &1988225153
