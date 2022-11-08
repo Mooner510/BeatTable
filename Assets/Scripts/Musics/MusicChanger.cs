@@ -212,8 +212,8 @@ namespace Musics {
                     return;
                 }
                 MusicManager.Instance.SetPlayMode(true);
-                StopCoroutine(StartMusic(GameMode.Keypad));
-                StartCoroutine(StartMusic(GameMode.Keypad));
+                StopCoroutine(StartMusic(MusicManager.Instance.GetCurrentMusicData().gameMode));
+                StartCoroutine(StartMusic(MusicManager.Instance.GetCurrentMusicData().gameMode));
             } else if (Input.GetKeyDown(KeyCode.R)) {
                 MusicManager.Instance.SetPlayMode(false);
                 StopCoroutine(StartMusic(GameMode.Keypad));

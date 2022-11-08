@@ -7,7 +7,7 @@
       "bpm": 127.5,
       "minute": 2,
       "second": 29,
-      "gameMode": "Keypad"
+      "gameMode": 0
     },
     {
       "name": "Kaibutsu",
@@ -16,7 +16,7 @@
       "bpm": 169.95,
       "minute": 2,
       "second": 54,
-      "gameMode": "Keypad"
+      "gameMode": 0
     },
     {
       "name": "Soft Icecream",
@@ -24,21 +24,21 @@
       "bpm": 142.5,
       "minute": 1,
       "second": 25,
-      "gameMode": "Keypad"
+      "gameMode": 0
     },
     {
       "name": "WTF",
       "artist": "HUGEL",
       "minute": 2,
       "second": 42,
-      "gameMode": "Keypad"
+      "gameMode": 0
     },
     {
       "name": "La La Rasputin",
       "artist": "Boney M.",
       "minute": 3,
       "second": 58,
-      "gameMode": "Quad"
+      "gameMode": 1
     }
   ]
 }

@@ -8,17 +8,14 @@ using UnityEngine.UI;
 using Utils;
 
 namespace Musics {
-    public class Player : MonoBehaviour {
-        public static Player Instance;
-    
-        [SerializeField] private GameObject beatInspector;
+    public class Player : SingleMono<Player> {
+        [SerializeField] protected GameObject beatInspector;
         [SerializeField] private SpriteRenderer hider;
         [SerializeField] private Text recording;
 
         private static readonly Color ClickColor = new Color(0f, 0.8f, 0.8f, 0.3f);
 
         private void Start() {
-            Instance = this;
             if (MusicManager.Instance.IsPlayMode()) {
                 NoteManager.LoadCurrentData();
                 recording.enabled = false;
@@ -57,11 +54,11 @@ namespace Musics {
             StartCoroutine(End());
         }
 
-        public IEnumerator Accept(LiveNoteData note, float time) {
+        public virtual IEnumerator Accept(LiveNoteData note, float time) {
             var colored = false;
             yield return new WaitForSeconds(time);
             KeyListener.Instance.Queue(note);
-            var obj = Instantiate(beatInspector, GameUtils.Locator(MusicManager.Instance.GetCurrentMusicData().gameMode, note.note), Quaternion.identity);
+            var obj = Instantiate(beatInspector, GameUtils.Locator(GameMode.Keypad, note.note), Quaternion.identity);
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
             for (var delta = 0f; delta <= 0.625f; delta += Time.deltaTime) {
                 yield return null;

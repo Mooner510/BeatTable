@@ -40,12 +40,15 @@ namespace Musics {
         private void Update() {
             if (!_readTick) return;
             if (!MusicManager.Instance.IsPlayMode() || NoteManager.IsTop(0)) return;
+            Tick();
+        }
+
+        protected virtual void Tick() {
             var now = GetPlayTime();
             var i = 0;
             do {
                 var note = NoteManager.Pick(i);
                 if (note.time <= now + 0.5f) {
-                    // Debug.Log($"Tick: {note.time}");
                     StartCoroutine(Player.Instance.Accept(NoteManager.Pop(), note.time - (now + 0.5f)));
                 } else break;
             } while (!NoteManager.IsTop(++i));
