@@ -27,7 +27,7 @@ namespace Score {
             _data = new int[5];
             comboText.text = "";
             scoreText.text = "0";
-            perfectText.text = "100.00%";
+            perfectText.text = "0.00%";
             _beforeSize = new[] {comboText.fontSize, scoreText.fontSize, perfectText.fontSize};
         }
 
@@ -51,7 +51,7 @@ namespace Score {
             comboText.text = _combo > 0 ? $"{_combo}" : "";
             
             if(scoreType == ScoreType.Miss) return 0;
-            var baseScore = scoreType.GetBaseScore() * (1 + _combo / 50d);
+            var baseScore = scoreType.GetBaseScore() * (1 + _combo / 200d);
             scoreText.text = $"{_score += baseScore:n0}";
             perfectText.text = $"{_data[0] * 100f / _total:n0}%";
             

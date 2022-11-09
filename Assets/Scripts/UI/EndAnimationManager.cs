@@ -53,11 +53,12 @@ namespace UI {
                     .Join(rank.transform.DOScale(1, 3).SetEase(Ease.OutCubic))
                     .Play();
             }
-            image.sprite = musicData.image;
+            image.sprite = musicData.blurImage;
             maxScore.text = $"{max:n0}";
         }
 
         private IEnumerator Animation() {
+            var musicData = MusicManager.Instance.GetCurrentMusicData();
             perfect.text = "";
             great.text = "";
             good.text = "";
@@ -72,36 +73,27 @@ namespace UI {
             var goodCount = Counter.GetData(ScoreType.Good);
             var badCount = Counter.GetData(ScoreType.Bad);
             var missCount = Counter.GetData(ScoreType.Miss);
-            var totalCount = Counter.GetTotal();
+            var totalCount = musicData.noteData.Length;
             var currentScore = (float) Counter.GetScore();
-            var final = (perfectCount + greatCount * 0.75f + goodCount * 0.35f + badCount * 0.1f) * 10 / Counter.GetTotal();
-            var finalIndex = Math.Min((int) Math.Round(final), 9);
-            var increases = new[] {
-                perfectCount / 2f,
-                greatCount / 2f,
-                goodCount / 2f,
-                badCount / 2f,
-                missCount / 2f,
-                currentScore / 2f,
-                perfectCount * 100f / totalCount / 2,
-                final / 2f
-            };
+            var final = (perfectCount + greatCount * 0.75f + goodCount * 0.35f + badCount * 0.1f) * 100 / totalCount;
+            var finalIndex = 9 - Math.Min((int) (Math.Round(final) / 10), 9);
+            var increases = perfectCount * 100f / totalCount;
             var values = new float[8];
             
             rank.sprite = ResourceManager.Instance.GetRank(finalIndex);
             score.color = ResourceManager.Instance.GetRankColor(finalIndex);
             perfectPercent.color = ResourceManager.Instance.GetRankColor(finalIndex);
 
-            for (var i = 0f; i <= 2; i += Time.deltaTime) {
+            for (var i = 0f; i <= 1; i += Time.deltaTime) {
                 var delta = Time.deltaTime;
-                perfect.text = $"{values[0] += increases[0] * delta:n0}";
-                great.text = $"{values[1] += increases[1] * delta:n0}";
-                good.text = $"{values[2] += increases[2] * delta:n0}";
-                bad.text = $"{values[3] += increases[3] * delta:n0}";
-                miss.text = $"{values[4] += increases[4] * delta:n0}";
-                score.text = $"{values[5] += increases[5] * delta:n0}";
-                perfectPercent.text = $"{values[6] += increases[6] * delta:n2}%";
-                finalPercent.text = $"{values[7] += increases[7] * delta:n2}%";
+                perfect.text = $"{values[0] += perfectCount * delta:n0}";
+                great.text = $"{values[1] += greatCount * delta:n0}";
+                good.text = $"{values[2] += goodCount * delta:n0}";
+                bad.text = $"{values[3] += badCount * delta:n0}";
+                miss.text = $"{values[4] += missCount * delta:n0}";
+                score.text = $"{values[5] += currentScore * delta:n0}";
+                perfectPercent.text = $"{values[6] += increases * delta:n2}%";
+                finalPercent.text = $"{values[7] += final * delta:n2}%";
                 yield return null;
             }
             rank.enabled = true;

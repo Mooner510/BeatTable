@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Musics.Data {
@@ -20,7 +21,9 @@ namespace Musics.Data {
         public static void LoadCurrentData() => _noteData = MusicManager.Instance.GetCurrentMusicData().ParseLiveNoteData();
 
         private static void SaveData() {
-            Json.CreateJsonFile($"Assets/Data/Map/{MusicManager.Instance.GetCurrentMusicData().name}", new GlobalNoteData(_writeNoteData.ToArray()));
+            var musicData = MusicManager.Instance.GetCurrentMusicData();
+            var gameMode = SceneManager.GetActiveScene().name.Equals("InGame") ? GameMode.Keypad : GameMode.Quad;
+            Json.CreateJsonFile($"Assets/Data/Map/{musicData.name}", new GlobalNoteData(_writeNoteData.ToArray(), gameMode));
         }
 
         public static void Start() {
