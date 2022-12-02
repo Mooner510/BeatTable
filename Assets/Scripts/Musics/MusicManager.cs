@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Musics.Data;
 using Utils;
 
 namespace Musics {
@@ -7,10 +8,20 @@ namespace Musics {
         private int _selection;
         private List<MusicData> _musicDataList;
         private bool _isPlayMode;
+        private MusicList _musics;
+        private static GameMode _latestGameMode;
+
+        public static void SetGameMode(GameMode gameMode) => _latestGameMode = gameMode;
+
+        public static GameMode GetCurrentGameMode() => _latestGameMode;
+        // if (SceneManager.GetActiveScene().name.Equals("End")) return _latestGameMode;   
+        // return _latestGameMode = SceneManager.GetActiveScene().name.Equals("InGame") ? GameMode.Keypad : GameMode.Quad;
 
         public int GetCurrentMusicId() => _selection;
 
         public MusicData GetCurrentMusicData() => _musicDataList[_selection];
+
+        public void UpdateCurrentMusicData() => _musicDataList[_selection] = _musics.musics[_selection].ToMusicData();
 
         public MusicManager() => Load();
 
@@ -28,8 +39,8 @@ namespace Musics {
 
         private void Load() {
             _selection = 0;
-            var musics = Json.LoadJsonFile<MusicList>("Assets/Data/data");
-            _musicDataList = new List<MusicData>(from info in musics.musics select info.ToMusicData());
+            _musics = Json.LoadJsonFile<MusicList>("Assets/Data/data");
+            _musicDataList = new List<MusicData>(from info in _musics.musics select info.ToMusicData());
         }
     }
 }

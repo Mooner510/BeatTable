@@ -52,12 +52,14 @@ namespace Listener {
 
         public void Update() {
             if (!MusicManager.Instance.IsPlayMode() && Input.GetKeyDown(KeyCode.Backspace)) {
-                NoteManager.Stop();
+                NoteManager.Stop(true);
+                Player.Instance.Stop();
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.Escape)) {
-                NoteManager.Stop();
+                if(!Ticker.Instance.IsTickReading()) return;
+                NoteManager.Stop(false);
                 Player.Instance.Stop();
                 return;
             }
@@ -105,7 +107,7 @@ namespace Listener {
 
         private void Spawn(LiveNoteData data, ScoreType score) {
             Debug.Log($"{data.time}, {score.GetTag()}");
-            var obj = Instantiate(scoreImage, GameUtils.LocationToCanvas(GameUtils.Locator(MusicManager.Instance.GetCurrentMusicData().gameMode, data.note)), Quaternion.identity);
+            var obj = Instantiate(scoreImage, GameUtils.LocationToCanvas(GameUtils.Locator(MusicManager.GetCurrentGameMode(), data.note)), Quaternion.identity);
             obj.transform.SetParent(GameUtils.Canvas.transform, false);
             obj.sprite = sprites[(int) score];
             increases.text = $"+{Counter.Instance.Count(score):n0}";
@@ -114,9 +116,12 @@ namespace Listener {
 
         public void Queue(LiveNoteData data) => StartCoroutine(Enqueue(data));
 
+        public const float NoteTime = 1f;
+        public const float AllowedTime = 0.1f;
+
         private IEnumerator Enqueue(LiveNoteData data) {
             NoteQueue[data.note].Enqueue(data);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(NoteTime);
             if (data.clicked) yield break;
             data.Click();
             Spawn(data, ScoreType.Miss);

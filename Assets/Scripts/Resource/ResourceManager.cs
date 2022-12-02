@@ -27,7 +27,7 @@ namespace Resource {
                 Resources.Load<Sprite>("Rank/C"),
                 Resources.Load<Sprite>("Rank/Dplus"),
                 Resources.Load<Sprite>("Rank/D"),
-                Resources.Load<Sprite>("Rank/F"),
+                Resources.Load<Sprite>("Rank/F")
             };
         }
 

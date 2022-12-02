@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Musics.Data {
@@ -18,12 +17,13 @@ namespace Musics.Data {
         
         public static LiveNoteData Pop() => _noteData[_index++];
 
-        public static void LoadCurrentData() => _noteData = MusicManager.Instance.GetCurrentMusicData().ParseLiveNoteData();
+        public static void LoadCurrentData() => _noteData = MusicManager.Instance.GetCurrentMusicData().ParseLiveNoteData(MusicManager.GetCurrentGameMode());
 
         private static void SaveData() {
             var musicData = MusicManager.Instance.GetCurrentMusicData();
-            var gameMode = SceneManager.GetActiveScene().name.Equals("InGame") ? GameMode.Keypad : GameMode.Quad;
-            Json.CreateJsonFile($"Assets/Data/Map/{musicData.name}", new GlobalNoteData(_writeNoteData.ToArray(), gameMode));
+            var gameMode = MusicManager.GetCurrentGameMode();
+            Json.CreateJsonFile($"Assets/Data/Map/{gameMode.ToString()}/{musicData.name}", new GlobalNoteData(_writeNoteData.ToArray()));
+            _writeNoteData = new List<NoteData>();
         }
 
         public static void Start() {
@@ -31,10 +31,10 @@ namespace Musics.Data {
             Ticker.Instance.Write();
         }
 
-        public static void Stop() {
+        public static void Stop(bool save) {
             Debug.Log("Stop and Save");
-            Ticker.Instance.StopWrite();
-            if (MusicManager.Instance.IsPlayMode()) return;
+            Ticker.Instance.StopWriteSoftness();
+            if (MusicManager.Instance.IsPlayMode() || !save) return;
             SaveData();
         }
 

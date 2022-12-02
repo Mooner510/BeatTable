@@ -21,9 +21,14 @@ namespace Musics {
         [SerializeField] private Text arrangeInfo;
         [SerializeField] private Text duration;
         [SerializeField] private Text durationInfo;
+        [SerializeField] private Text difficulty;
+        [SerializeField] private Text difficultyInfo;
         [SerializeField] private Text suggestion1;
         [SerializeField] private Text suggestion2;
         [SerializeField] private Text suggestion3;
+        [SerializeField] private Text selectorUp;
+        [SerializeField] private Text selectorDown;
+        [SerializeField] private Text modeText;
         [SerializeField] private SpriteRenderer hider;
         [SerializeField] private AudioSource audioPlayer;
 
@@ -44,6 +49,7 @@ namespace Musics {
         private const float TitleOut = Suggest1Out + 35f;
         private const float LeftOut = -440f;
         private const float RightOut = 420f;
+        private const float SelectorOut = 460f;
 
         #endregion
 
@@ -53,6 +59,7 @@ namespace Musics {
         private Text _subTitle;
         private bool _canStart;
         private Sequence _clickSequence;
+        private GameMode _mode;
 
         #endregion
 
@@ -65,6 +72,7 @@ namespace Musics {
                 .OnStart(() => suggestion2.transform.localScale = Vector3.one * 1.2f)
                 .Append(suggestion2.transform.DOScale(Vector3.one, 1).SetEase(Ease.OutCubic));
 
+            MusicManager.Instance.UpdateCurrentMusicData();
             var musicData = MusicManager.Instance.GetCurrentMusicData();
             
             _subImage = Instantiate(image, ImageLocation, Quaternion.identity);
@@ -78,12 +86,15 @@ namespace Musics {
                 _subTitle.transform.SetParent(GameUtils.Canvas, false);
                 _subTitle.text = musicData.name;
             }
+            
+            _mode = GameMode.Keypad;
+            modeText.color = _mode.GetColor();
+            modeText.text = $"{_mode.ToString()} Mode";
 
             TextUpdate(null, null, null, null, false, musicData);
         }
 
-        private void TextUpdate([CanBeNull] Image newImage, [CanBeNull] Text newTitle,
-            [CanBeNull] Component currentImage, [CanBeNull] Component currentTitle, bool isLeft, MusicData musicData) {
+        private void TextUpdate([CanBeNull] Image newImage, [CanBeNull] Text newTitle, [CanBeNull] Component currentImage, [CanBeNull] Component currentTitle, bool isLeft, MusicData musicData) {
             if (newImage != null) {
                 newImage.sprite = musicData.image;
                 newImage.transform.DOLocalMove(ImageLocation, 1f).SetEase(Ease.OutCubic);
@@ -112,20 +123,28 @@ namespace Musics {
                 arrangeInfo.enabled = true;
             }
 
-            duration.text = $"{musicData.minute}:{musicData.second}";
-            if (musicData.noteData == null || musicData.noteData.Length <= 0) {
-                suggestion1.text = "Press R to Keypad Mode Record";
-                suggestion2.text = "This music doesn't have note map!";
-                _canStart = false;
-            } else {
-                suggestion1.text = "Press Q to Start";
-                suggestion2.text = "Or Press R to Keypad Mode Record";
-                _canStart = true;
-            }
+            UpdateSuggestion(musicData);
+
+            duration.text = $"{musicData.minute}:{musicData.second:00}";
+            difficulty.text = $"{StringUtils.ToRoman(musicData.difficulty)}";
+            difficulty.color = musicData.GetDifficultyColor();
 
             audioPlayer.Stop();
             audioPlayer.clip = musicData.titleAudio;
             audioPlayer.Play();
+        }
+
+        private void UpdateSuggestion(MusicData musicData) {
+            var noteData = musicData.GetNoteData(_mode);
+            if (noteData == null || noteData.Length <= 0) {
+                suggestion1.text = "Press E to Record";
+                suggestion2.text = "This music doesn't have note map!";
+                _canStart = false;
+            } else {
+                suggestion1.text = "Press Q / Enter to Start";
+                suggestion2.text = "Or Press E to Edit";
+                _canStart = true;
+            }
         }
 
         private IEnumerator MoveLeft() {
@@ -172,12 +191,18 @@ namespace Musics {
             artistInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             arrangeInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             durationInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
+            difficultyInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             artist.transform.DOLocalMoveX(TextOut, 2).SetEase(Ease.OutCubic);
             arranger.transform.DOLocalMoveX(TextOut, 2).SetEase(Ease.OutCubic);
             duration.transform.DOLocalMoveX(TextOut, 2).SetEase(Ease.OutCubic);
+            difficulty.transform.DOLocalMoveX(TextOut, 2).SetEase(Ease.OutCubic);
             suggestion1.transform.DOLocalMoveY(Suggest1Out, 2).SetEase(Ease.OutCubic);
             suggestion2.transform.DOLocalMoveY(Suggest2Out, 2).SetEase(Ease.OutCubic);
             suggestion3.transform.DOLocalMoveY(Suggest3Out, 2).SetEase(Ease.OutCubic);
+            selectorUp.transform.DOLocalMoveX(SelectorOut, 2).SetEase(Ease.OutCubic);
+            selectorDown.transform.DOLocalMoveX(SelectorOut, 2).SetEase(Ease.OutCubic);
+            modeText.transform.DOLocalMoveX(SelectorOut, 2).SetEase(Ease.OutCubic);
+            difficultyInfo.transform.DOLocalMoveX(UIOut, 2).SetEase(Ease.OutCubic);
             left.transform.DOLocalMoveX(LeftOut, 2).SetEase(Ease.OutCubic);
             right.transform.DOLocalMoveX(RightOut, 2).SetEase(Ease.OutCubic);
             _subImage.transform.DOLocalMove(Vector3.zero, 3).SetEase(Ease.OutCubic);
@@ -200,28 +225,31 @@ namespace Musics {
         }
 
         private void Update() {
-            if (Input.GetKeyDown(KeyCode.A)) {
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
                 StopCoroutine(MoveLeft());
                 StartCoroutine(MoveLeft());
-            } else if (Input.GetKeyDown(KeyCode.D)) {
+            } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
                 StopCoroutine(MoveRight());
                 StartCoroutine(MoveRight());
-            } else if (Input.GetKeyDown(KeyCode.Q)) {
+            } else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+                _mode = _mode == GameMode.Keypad ? GameMode.Quad : GameMode.Keypad;
+                modeText.color = _mode.GetColor();
+                modeText.text = $"{_mode.ToString()} Mode";
+                UpdateSuggestion(MusicManager.Instance.GetCurrentMusicData());
+                MusicManager.SetGameMode(_mode);
+            } else if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Return)) {
                 if (!_canStart) {
                     _clickSequence.Restart();
                     return;
                 }
                 MusicManager.Instance.SetPlayMode(true);
-                StopCoroutine(StartMusic(MusicManager.Instance.GetCurrentMusicData().gameMode));
-                StartCoroutine(StartMusic(MusicManager.Instance.GetCurrentMusicData().gameMode));
-            } else if (Input.GetKeyDown(KeyCode.R)) {
-                MusicManager.Instance.SetPlayMode(false);
-                StopCoroutine(StartMusic(GameMode.Keypad));
-                StartCoroutine(StartMusic(GameMode.Keypad));
+                MusicManager.Instance.SetPlayMode(true);
+                StopCoroutine(StartMusic(_mode));
+                StartCoroutine(StartMusic(_mode));
             } else if (Input.GetKeyDown(KeyCode.E)) {
                 MusicManager.Instance.SetPlayMode(false);
-                StopCoroutine(StartMusic(GameMode.Quad));
-                StartCoroutine(StartMusic(GameMode.Quad));
+                StopCoroutine(StartMusic(_mode));
+                StartCoroutine(StartMusic(_mode));
             }
         }
     }

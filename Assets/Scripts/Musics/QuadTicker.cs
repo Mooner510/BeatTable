@@ -1,4 +1,5 @@
-﻿using Musics.Data;
+﻿using Listener;
+using Musics.Data;
 
 namespace Musics {
     public class QuadTicker : Ticker {
@@ -7,8 +8,8 @@ namespace Musics {
             var i = 0;
             do {
                 var note = NoteManager.Pick(i);
-                if (note.time <= now + 1f) {
-                    StartCoroutine(Player.Instance.Accept(NoteManager.Pop(), note.time - (now + 1f)));
+                if (note.time <= now + KeyListener.NoteTime) {
+                    StartCoroutine(Player.Instance.Accept(NoteManager.Pop(), note.time - (now + KeyListener.NoteTime)));
                 } else break;
             } while (!NoteManager.IsTop(++i));
         }

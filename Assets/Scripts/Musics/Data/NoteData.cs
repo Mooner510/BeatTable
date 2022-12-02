@@ -4,12 +4,8 @@ namespace Musics.Data {
     [Serializable]
     public class GlobalNoteData {
         public NoteData[] data;
-        public GameMode gameMode;
 
-        public GlobalNoteData(NoteData[] data, GameMode gameMode) {
-            this.data = data;
-            this.gameMode = gameMode;
-        }
+        public GlobalNoteData(NoteData[] data) => this.data = data;
     }
     
     [Serializable]

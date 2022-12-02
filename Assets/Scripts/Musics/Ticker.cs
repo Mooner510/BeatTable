@@ -16,6 +16,8 @@ namespace Musics {
             // _beat = true;
         }
 
+        public bool IsTickReading() => _readTick;
+
         public float GetStartTime() => _writeTime;
 
         public float GetPlayTime() => Time.realtimeSinceStartup - _writeTime;
@@ -35,6 +37,24 @@ namespace Musics {
             // if (_routine == null) return;
             // StopCoroutine(_routine);
             musicSound.Stop();
+        }
+
+        public void StopWriteSoftness() {
+            Debug.Log("Write Stop");
+            if(!_readTick) return;
+            _readTick = false;
+            // if (_routine == null) return;
+            // StopCoroutine(_routine);
+            StartCoroutine(StopMusic());
+        }
+
+        private IEnumerator StopMusic() {
+            for (var i = 0f; i <= 2; i += Time.deltaTime) {
+                yield return null;
+                musicSound.volume = 1 - 0.5f * i;
+            }
+            musicSound.Stop();
+            musicSound.volume = 1;
         }
 
         private void Update() {

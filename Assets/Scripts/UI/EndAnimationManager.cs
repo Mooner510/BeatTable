@@ -22,6 +22,8 @@ namespace UI {
         [SerializeField] private Text good;
         [SerializeField] private Text bad;
         [SerializeField] private Text miss;
+        [SerializeField] private Text artist;
+        [SerializeField] private Text difficulty;
         [SerializeField] private Image rank;
         [SerializeField] private AudioSource audioPlayer;
         [SerializeField] private Button button;
@@ -53,12 +55,16 @@ namespace UI {
                     .Join(rank.transform.DOScale(1, 3).SetEase(Ease.OutCubic))
                     .Play();
             }
+
+            artist.DOText(musicData.name, .75f).SetEase(Ease.OutCubic).Play();
+            difficulty.DOText(StringUtils.ToRoman(musicData.difficulty), .75f).SetEase(Ease.OutCubic).Play();
             image.sprite = musicData.blurImage;
             maxScore.text = $"{max:n0}";
         }
 
         private IEnumerator Animation() {
             var musicData = MusicManager.Instance.GetCurrentMusicData();
+            var gameMode = MusicManager.GetCurrentGameMode();
             perfect.text = "";
             great.text = "";
             good.text = "";
@@ -73,16 +79,19 @@ namespace UI {
             var goodCount = Counter.GetData(ScoreType.Good);
             var badCount = Counter.GetData(ScoreType.Bad);
             var missCount = Counter.GetData(ScoreType.Miss);
-            var totalCount = musicData.noteData.Length;
+            var noteData = musicData.GetNoteData(gameMode);
+            var totalCount = noteData?.Length ?? 0;
             var currentScore = (float) Counter.GetScore();
             var final = (perfectCount + greatCount * 0.75f + goodCount * 0.35f + badCount * 0.1f) * 100 / totalCount;
-            var finalIndex = 9 - Math.Min((int) (Math.Round(final) / 10), 9);
+            var finalIndex = 9 - NumberUtils.Between((int) (Math.Round(final) / 10), 9, 0);
             var increases = perfectCount * 100f / totalCount;
             var values = new float[8];
             
             rank.sprite = ResourceManager.Instance.GetRank(finalIndex);
             score.color = ResourceManager.Instance.GetRankColor(finalIndex);
             perfectPercent.color = ResourceManager.Instance.GetRankColor(finalIndex);
+            var localY = rank.transform.localPosition.y;
+            rank.transform.DOLocalMoveY(localY + 6, 2f);
 
             for (var i = 0f; i <= 1; i += Time.deltaTime) {
                 var delta = Time.deltaTime;
@@ -110,6 +119,12 @@ namespace UI {
             score.text = $"{currentScore:n0}";
             perfectPercent.text = $"{perfectCount * 100f / totalCount:n2}%";
             finalPercent.text = $"{final:n2}%";
+            yield return new WaitForSecondsRealtime(1f);
+            DOTween.Sequence()
+                .Append(rank.transform.DOLocalMoveY(localY - 6, 2f))
+                .Append(rank.transform.DOLocalMoveY(localY + 6, 2f))
+                .SetLoops(-1)
+                .Play();
         }
     }
 }
