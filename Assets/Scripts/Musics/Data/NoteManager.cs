@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +9,13 @@ namespace Musics.Data {
         private static List<LiveNoteData> _noteData;
         private static List<NoteData> _writeNoteData = new List<NoteData>();
         private static int _index;
+        private static int _noteSpeed = 80;
+
+        public static float GetNoteSpeed() => _noteSpeed / 10f;
+
+        public static float NoteSpeedUp(bool shift) => _noteSpeed = Math.Min(_noteSpeed + (shift ? 10 : 1), 160);
+
+        public static float NoteSpeedDown(bool shift) => _noteSpeed = Math.Max(_noteSpeed - (shift ? 10 : 1), 1);
 
         public static bool IsTop(int i) => _index + i >= _noteData.Count;
 

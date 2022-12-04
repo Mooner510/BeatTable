@@ -13,7 +13,7 @@ namespace Musics {
         public override IEnumerator Accept(LiveNoteData note, float time) {
             yield return new WaitForSecondsRealtime(time);
             
-            const float noteTime = KeyListener.NoteTime / 2 - KeyListener.AllowedTime;
+            var noteTime = KeyListener.NoteTime / 2 - KeyListener.AllowedTime;
             
             var location = GameUtils.Locator(GameMode.Quad, note.note);
             var obj = Instantiate(beatInspector, location * 5f, Quaternion.identity);

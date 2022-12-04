@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Musics.Data;
+using UnityEngine;
 using Utils;
 
 namespace Musics {
@@ -23,7 +24,7 @@ namespace Musics {
 
         public void UpdateCurrentMusicData() => _musicDataList[_selection] = _musics.musics[_selection].ToMusicData();
 
-        public MusicManager() => Load();
+        // public MusicManager() => ReloadAll();
 
         public MusicData Next() => IsLast() ? _musicDataList[_selection = 0] : _musicDataList[++_selection];
 
@@ -37,8 +38,8 @@ namespace Musics {
 
         public void SetPlayMode(bool play) => _isPlayMode = play;
 
-        private void Load() {
-            _selection = 0;
+        public void ReloadAll() {
+            Debug.Log("Reloaded All Musics");
             _musics = Json.LoadJsonFile<MusicList>("Assets/Data/data");
             _musicDataList = new List<MusicData>(from info in _musics.musics select info.ToMusicData());
         }

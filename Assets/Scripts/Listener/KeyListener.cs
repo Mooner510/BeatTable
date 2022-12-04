@@ -94,9 +94,9 @@ namespace Listener {
                         Spawn(liveNoteData, ScoreType.Perfect);
                     } else if (diff <= 0.125f) {
                         Spawn(liveNoteData, ScoreType.Great);
-                    } else if (diff <= 0.25f) {
+                    } else if (diff <= 0.175f) {
                         Spawn(liveNoteData, ScoreType.Good);
-                    } else if (diff <= 0.45f) {
+                    } else if (diff <= 0.3f) {
                         Spawn(liveNoteData, ScoreType.Bad);
                     } else {
                         Spawn(liveNoteData, ScoreType.Miss);
@@ -116,12 +116,19 @@ namespace Listener {
 
         public void Queue(LiveNoteData data) => StartCoroutine(Enqueue(data));
 
-        public const float NoteTime = 1f;
-        public const float AllowedTime = 0.1f;
+        public static float NoteTime {
+            get {
+                var noteSpeed = NoteManager.GetNoteSpeed();
+                if (noteSpeed < 8) return 1 + (8 - noteSpeed) * 0.575f;
+                if (noteSpeed > 8) return 1 - (noteSpeed - 8) * 0.065f;
+                return 1f;
+            }
+        }
+        public static float AllowedTime => Math.Min(NoteTime / 10, 0.3f);
 
         private IEnumerator Enqueue(LiveNoteData data) {
             NoteQueue[data.note].Enqueue(data);
-            yield return new WaitForSeconds(NoteTime);
+            yield return new WaitForSeconds(NoteTime / 2 + AllowedTime);
             if (data.clicked) yield break;
             data.Click();
             Spawn(data, ScoreType.Miss);

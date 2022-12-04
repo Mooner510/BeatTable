@@ -29,7 +29,6 @@ namespace Musics {
         }
 
         private IEnumerator End() {
-            NoteManager.Stop(true);
             var color = hider.color;
             for (var i = 0f; i <= 3; i += Time.deltaTime) {
                 color.a = i / 3;
@@ -61,8 +60,8 @@ namespace Musics {
             KeyListener.Instance.Queue(note);
             var obj = Instantiate(beatInspector, GameUtils.Locator(GameMode.Keypad, note.note), Quaternion.identity);
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();
-            const float noteTime = KeyListener.NoteTime / 2;
-            const float fullNoteTime = KeyListener.NoteTime / 2 + KeyListener.AllowedTime;
+            var noteTime = KeyListener.NoteTime / 2;
+            var fullNoteTime = KeyListener.NoteTime / 2 + KeyListener.AllowedTime;
             for (var delta = 0f; delta <= fullNoteTime; delta += Time.deltaTime) {
                 yield return null;
                 obj.transform.position = MapMaker.Instance.GetNote(note.note).transform.position;
