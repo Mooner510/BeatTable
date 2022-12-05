@@ -33,6 +33,8 @@ namespace Musics {
         [SerializeField] private Text speedDown;
         [SerializeField] private Text speedText;
         [SerializeField] private Text shiftText;
+        [SerializeField] private Image keypadImage;
+        [SerializeField] private Image quadImage;
         [SerializeField] private SpriteRenderer hider;
         [SerializeField] private AudioSource audioPlayer;
 
@@ -66,7 +68,6 @@ namespace Musics {
         private Text _subTitle;
         private bool _canStart;
         private Sequence _clickSequence;
-        private GameMode _mode;
         private Sequence[] _sequences;
 
         #endregion
@@ -125,9 +126,9 @@ namespace Musics {
                 _subTitle.text = musicData.name;
             }
 
-            _mode = GameMode.Keypad;
-            modeText.color = _mode.GetColor();
-            modeText.text = $"{_mode.ToString()} Mode";
+            var gameMode = MusicManager.GetCurrentGameMode();
+            modeText.color = gameMode.GetColor();
+            modeText.text = $"{gameMode.ToString()} Mode";
 
             TextUpdate(null, null, null, null, false, musicData);
         }
@@ -174,7 +175,7 @@ namespace Musics {
         }
 
         private void UpdateSuggestion(MusicData musicData) {
-            var noteData = musicData.GetNoteData(_mode);
+            var noteData = musicData.GetNoteData(MusicManager.GetCurrentGameMode());
             if (noteData == null || noteData.Length <= 0) {
                 suggestion1.text = "Press E to Record";
                 suggestion2.text = "This music doesn't have note map!";
@@ -305,39 +306,44 @@ namespace Musics {
                 StopCoroutine(MoveRight());
                 StartCoroutine(MoveRight());
                 _sequences[1].Restart();
-            } else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) ||
-                       Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
-                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) _sequences[2].Restart();
-                else _sequences[3].Restart();
-                _mode = _mode == GameMode.Keypad ? GameMode.Quad : GameMode.Keypad;
-                modeText.color = _mode.GetColor();
-                modeText.text = $"{_mode.ToString()} Mode";
-                UpdateSuggestion(MusicManager.Instance.GetCurrentMusicData());
-                MusicManager.SetGameMode(_mode);
-            } else if (Input.GetKeyDown(KeyCode.Z)) {
-                NoteManager.NoteSpeedDown(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-                speedText.text = $"{NoteManager.GetNoteSpeed():F1}";
-                speedText.color = SpeedColors[(int) NoteManager.GetNoteSpeed() / 2];
-                _sequences[5].Restart();
-            } else if (Input.GetKeyDown(KeyCode.X)) {
-                NoteManager.NoteSpeedUp(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-                speedText.text = $"{NoteManager.GetNoteSpeed():F1}";
-                speedText.color = SpeedColors[(int) NoteManager.GetNoteSpeed() / 2];
-                _sequences[4].Restart();
-            } else if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Return)) {
-                if (!_canStart) {
-                    _clickSequence.Restart();
-                    return;
-                }
+            } else {
+                var gameMode = MusicManager.GetCurrentGameMode();
+                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) ||
+                    Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+                    if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) _sequences[2].Restart();
+                    else _sequences[3].Restart();
+                    gameMode = gameMode == GameMode.Keypad ? GameMode.Quad : GameMode.Keypad;
+                    modeText.color = gameMode.GetColor();
+                    modeText.text = $"{gameMode.ToString()} Mode";
+                    keypadImage.enabled = gameMode == GameMode.Keypad;
+                    quadImage.enabled = gameMode == GameMode.Quad;
+                    UpdateSuggestion(MusicManager.Instance.GetCurrentMusicData());
+                    MusicManager.SetGameMode(gameMode);
+                } else if (Input.GetKeyDown(KeyCode.Z)) {
+                    NoteManager.NoteSpeedDown(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+                    speedText.text = $"{NoteManager.GetNoteSpeed():F1}";
+                    speedText.color = SpeedColors[(int) NoteManager.GetNoteSpeed() / 2];
+                    _sequences[5].Restart();
+                } else if (Input.GetKeyDown(KeyCode.X)) {
+                    NoteManager.NoteSpeedUp(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+                    speedText.text = $"{NoteManager.GetNoteSpeed():F1}";
+                    speedText.color = SpeedColors[(int) NoteManager.GetNoteSpeed() / 2];
+                    _sequences[4].Restart();
+                } else if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Return)) {
+                    if (!_canStart) {
+                        _clickSequence.Restart();
+                        return;
+                    }
 
-                MusicManager.Instance.SetPlayMode(true);
-                MusicManager.Instance.SetPlayMode(true);
-                StopCoroutine(StartMusic(_mode));
-                StartCoroutine(StartMusic(_mode));
-            } else if (Input.GetKeyDown(KeyCode.E)) {
-                MusicManager.Instance.SetPlayMode(false);
-                StopCoroutine(StartMusic(_mode));
-                StartCoroutine(StartMusic(_mode));
+                    MusicManager.Instance.SetPlayMode(true);
+                    MusicManager.Instance.SetPlayMode(true);
+                    StopCoroutine(StartMusic(gameMode));
+                    StartCoroutine(StartMusic(gameMode));
+                } else if (Input.GetKeyDown(KeyCode.E)) {
+                    MusicManager.Instance.SetPlayMode(false);
+                    StopCoroutine(StartMusic(gameMode));
+                    StartCoroutine(StartMusic(gameMode));
+                }
             }
         }
     }

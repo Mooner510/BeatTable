@@ -10,7 +10,7 @@ namespace Musics {
         private List<MusicData> _musicDataList;
         private bool _isPlayMode;
         private MusicList _musics;
-        private static GameMode _latestGameMode;
+        private static GameMode _latestGameMode = GameMode.Keypad;
 
         public static void SetGameMode(GameMode gameMode) => _latestGameMode = gameMode;
 

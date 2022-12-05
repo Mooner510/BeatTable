@@ -128,7 +128,7 @@ namespace Listener {
 
         private IEnumerator Enqueue(LiveNoteData data) {
             NoteQueue[data.note].Enqueue(data);
-            yield return new WaitForSeconds(NoteTime / 2 + AllowedTime);
+            yield return new WaitForSeconds(NoteTime - AllowedTime * 2);
             if (data.clicked) yield break;
             data.Click();
             Spawn(data, ScoreType.Miss);

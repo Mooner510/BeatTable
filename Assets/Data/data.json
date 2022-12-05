@@ -30,6 +30,14 @@
       "difficulty": 4
     },
     {
+      "name": "La La Rasputin",
+      "artist": "Boney M.",
+      "minute": 3,
+      "second": 58,
+      "gameMode": 1,
+      "level": 12
+    },
+    {
       "name": "Unity",
       "artist": "TheFatRat",
       "minute": 2,

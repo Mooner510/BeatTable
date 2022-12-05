@@ -29,6 +29,7 @@ namespace Musics {
         }
 
         private IEnumerator End() {
+            NoteManager.Stop(true);
             var color = hider.color;
             for (var i = 0f; i <= 3; i += Time.deltaTime) {
                 color.a = i / 3;
@@ -36,7 +37,7 @@ namespace Musics {
                 yield return null;
             }
             hider.color = Color.black;
-            SceneManager.LoadScene(3);
+            SceneManager.LoadScene(MusicManager.Instance.IsPlayMode() ? 3 : 0);
         }
 
         private IEnumerator Init() {
