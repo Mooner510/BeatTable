@@ -117,9 +117,14 @@ namespace Listener {
         public static float NoteTime {
             get {
                 var noteSpeed = NoteManager.GetNoteSpeed();
-                if (noteSpeed < 8) return 1 + (8 - noteSpeed) * 0.575f;
-                if (noteSpeed > 8) return 1 - (noteSpeed - 8) * 0.065f;
-                return 1f;
+                if (MusicManager.GetCurrentGameMode() == GameMode.Keypad) {
+                    if (noteSpeed < 8) return 1 + (8 - noteSpeed) * 0.585f;
+                    if (noteSpeed > 8) return 1 - (noteSpeed - 8) * 0.0725f;
+                    return 1f;
+                }
+                if (noteSpeed < 8) return 2 + (8 - noteSpeed) * 0.95f;
+                if (noteSpeed > 8) return 2 - (noteSpeed - 8) * 0.18f;
+                return 2f;
             }
         }
         public static float AllowedTime => Math.Min(NoteTime / 10, 0.3f);

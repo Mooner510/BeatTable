@@ -103,7 +103,7 @@ namespace Musics {
             }
         }
 
-        public Color GetDifficultyColor() => _difficultyColors[Math.Min(difficulty / 2, 5)];
+        public Color GetDifficultyColor() => _difficultyColors[Math.Min((difficulty - 1) / 2, 4)];
 
         public NoteData[] GetNoteData(GameMode gameMode) => gameMode == GameMode.Keypad ? keypadNoteData : quadNoteData;
 
