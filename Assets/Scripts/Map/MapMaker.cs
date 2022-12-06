@@ -45,15 +45,16 @@ namespace Map {
             NoteRenderers[note].color = Color.white;
         }
 
-        public virtual IEnumerator Beat() {
+        public virtual IEnumerator Beat(int note) {
             for (var time = 0f; time <= 0.5f; time += Time.deltaTime) {
                 for (var i = 0; i < 9; i++) {
                     var pos = GameUtils.Locator(MusicManager.GetCurrentGameMode(), i);
                     Notes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
                     Notes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) / 3);
-                    BackNotes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
-                    BackNotes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) * 1.2f / 3) * 1.15f;
                 }
+                var position = GameUtils.Locator(MusicManager.GetCurrentGameMode(), note);
+                BackNotes[note].transform.localPosition = position * (1 + (0.5f - time) / 8);
+                BackNotes[note].transform.localScale = Vector3.one * (0.4f + (0.175f - time * 0.4f) / 3);
                 yield return null;
             }
         }

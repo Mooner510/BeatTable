@@ -7,8 +7,7 @@
       "bpm": 127.5,
       "minute": 2,
       "second": 29,
-      "gameMode": 0,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "name": "Kaibutsu",
@@ -17,8 +16,7 @@
       "bpm": 169.95,
       "minute": 2,
       "second": 54,
-      "gameMode": 0,
-      "difficulty": 0
+      "difficulty": 3
     },
     {
       "name": "Soft Icecream",
@@ -26,7 +24,6 @@
       "bpm": 142.5,
       "minute": 1,
       "second": 25,
-      "gameMode": 0,
       "difficulty": 4
     },
     {
@@ -34,41 +31,33 @@
       "artist": "Mooner510",
       "bpm": 142.5,
       "minute": 2,
-      "second": 26,
-      "gameMode": 0,
-      "difficulty": 4
+      "second": 26
     },
     {
       "name": "La La Rasputin",
       "artist": "Boney M.",
       "minute": 3,
       "second": 58,
-      "gameMode": 1,
-      "level": 12
+      "difficulty": 10
     },
     {
       "name": "Unity",
       "artist": "TheFatRat",
       "minute": 2,
       "second": 0,
-      "gameMode": 1,
-      "difficulty": 10
+      "difficulty": 6
     },
     {
       "name": "Fade",
       "artist": "Alan Walker",
       "minute": 2,
-      "second": 1,
-      "gameMode": 1,
-      "difficulty": 10
+      "second": 1
     },
     {
       "name": "Sky High",
       "artist": "Elektronomia",
       "minute": 1,
-      "second": 33,
-      "gameMode": 1,
-      "difficulty": 10
+      "second": 33
     },
     {
       "name": "설날",
@@ -76,8 +65,7 @@
       "arrange": "Mooner510",
       "minute": 0,
       "second": 46,
-      "gameMode": 1,
-      "difficulty": 10
+      "difficulty": 6
     },
     {
       "name": "Up In My Jam",
@@ -85,7 +73,7 @@
       "minute": 2,
       "second": 31,
       "gameMode": 1,
-      "difficulty": 10
+      "difficulty": 8
     },
     {
       "name": "Happy Birthday To You",
@@ -94,7 +82,7 @@
       "minute": 2,
       "second": 20,
       "gameMode": 1,
-      "difficulty": 10
+      "difficulty": 7
     }
   ]
 }

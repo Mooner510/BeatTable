@@ -40,7 +40,7 @@ namespace Score {
             text.transform.localScale = Vector3.one;
         }
 
-        public double Count(ScoreType scoreType) {
+        public double Count(int note, ScoreType scoreType) {
             _total++;
             var value = (int) scoreType;
             
@@ -64,8 +64,8 @@ namespace Score {
             StopCoroutine(Sizing(perfectText, 2));
             StartCoroutine(Sizing(perfectText, 2));
 
-            StopCoroutine(MapMaker.Instance.Beat());
-            StartCoroutine(MapMaker.Instance.Beat());
+            StopCoroutine(MapMaker.Instance.Beat(note));
+            StartCoroutine(MapMaker.Instance.Beat(note));
             return baseScore;
         }
     }

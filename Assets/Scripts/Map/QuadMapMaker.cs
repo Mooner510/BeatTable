@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Musics;
 using Musics.Data;
 using UnityEngine;
 using Utils;
@@ -19,15 +20,16 @@ namespace Map {
             }
         }
 
-        public override IEnumerator Beat() {
+        public override IEnumerator Beat(int note) {
             for (var time = 0f; time <= 0.5f; time += Time.deltaTime) {
                 for (var i = 0; i < 4; i++) {
                     var pos = GameUtils.Locator(GameMode.Quad, i);
                     Notes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
                     Notes[i].transform.localScale = Vector3.one * (2 + (0.5f - time) / 3);
-                    BackNotes[i].transform.localPosition = pos * (1 + (0.5f - time) / 8);
-                    BackNotes[i].transform.localScale = Vector3.one * (0.35f + (0.175f - time * 0.35f) / 3);
                 }
+                var position = GameUtils.Locator(MusicManager.GetCurrentGameMode(), note);
+                BackNotes[note].transform.localPosition = position * (1 + (0.5f - time) / 8);
+                BackNotes[note].transform.localScale = Vector3.one * (0.4f + (0.175f - time * 0.4f) / 3);
                 yield return null;
             }
         }

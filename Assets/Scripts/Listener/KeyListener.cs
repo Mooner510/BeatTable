@@ -108,7 +108,7 @@ namespace Listener {
             var obj = Instantiate(scoreImage, GameUtils.LocationToCanvas(GameUtils.Locator(MusicManager.GetCurrentGameMode(), data.note)), Quaternion.identity);
             obj.transform.SetParent(GameUtils.Canvas.transform, false);
             obj.sprite = sprites[(int) score];
-            increases.text = $"+{Counter.Instance.Count(score):n0}";
+            increases.text = $"+{Counter.Instance.Count(data.note, score):n0}";
             _scoreSequence.Restart();
         }
 
