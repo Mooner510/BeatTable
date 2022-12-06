@@ -30,6 +30,15 @@
       "difficulty": 4
     },
     {
+      "name": "Happiness",
+      "artist": "Mooner510",
+      "bpm": 142.5,
+      "minute": 2,
+      "second": 26,
+      "gameMode": 0,
+      "difficulty": 4
+    },
+    {
       "name": "La La Rasputin",
       "artist": "Boney M.",
       "minute": 3,
@@ -42,6 +51,22 @@
       "artist": "TheFatRat",
       "minute": 2,
       "second": 0,
+      "gameMode": 1,
+      "difficulty": 10
+    },
+    {
+      "name": "Fade",
+      "artist": "Alan Walker",
+      "minute": 2,
+      "second": 1,
+      "gameMode": 1,
+      "difficulty": 10
+    },
+    {
+      "name": "Sky High",
+      "artist": "Elektronomia",
+      "minute": 1,
+      "second": 33,
       "gameMode": 1,
       "difficulty": 10
     },

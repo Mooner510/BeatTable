@@ -24,7 +24,7 @@ namespace Musics {
 
         public void UpdateCurrentMusicData() => _musicDataList[_selection] = _musics.musics[_selection].ToMusicData();
 
-        // public MusicManager() => ReloadAll();
+        public MusicManager() => ReloadAll();
 
         public MusicData Next() => IsLast() ? _musicDataList[_selection = 0] : _musicDataList[++_selection];
 
@@ -38,7 +38,7 @@ namespace Musics {
 
         public void SetPlayMode(bool play) => _isPlayMode = play;
 
-        public void ReloadAll() {
+        private void ReloadAll() {
             Debug.Log("Reloaded All Musics");
             _musics = Json.LoadJsonFile<MusicList>("Assets/Data/data");
             _musicDataList = new List<MusicData>(from info in _musics.musics select info.ToMusicData());

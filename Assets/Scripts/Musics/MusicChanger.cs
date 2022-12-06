@@ -33,6 +33,7 @@ namespace Musics {
         [SerializeField] private Text speedDown;
         [SerializeField] private Text speedText;
         [SerializeField] private Text shiftText;
+        [SerializeField] private Text speedInfoText;
         [SerializeField] private Image keypadImage;
         [SerializeField] private Image quadImage;
         [SerializeField] private SpriteRenderer hider;
@@ -111,7 +112,6 @@ namespace Musics {
                     .Append(speedDown.transform.DOScale(Vector3.one, 1).SetEase(Ease.OutCubic)),
             };
 
-            MusicManager.Instance.ReloadAll();
             var musicData = MusicManager.Instance.GetCurrentMusicData();
 
             _subImage = Instantiate(image, ImageLocation, Quaternion.identity);
@@ -127,6 +127,8 @@ namespace Musics {
             }
 
             var gameMode = MusicManager.GetCurrentGameMode();
+            keypadImage.enabled = gameMode == GameMode.Keypad;
+            quadImage.enabled = gameMode == GameMode.Quad;
             modeText.color = gameMode.GetColor();
             modeText.text = $"{gameMode.ToString()} Mode";
 
@@ -252,6 +254,10 @@ namespace Musics {
             speedDown.transform.DOLocalMoveX(SpeedDownOut, 2).SetEase(Ease.OutCubic);
             speedText.transform.DOLocalMoveX(SpeedOut, 2).SetEase(Ease.OutCubic);
             shiftText.transform.DOLocalMoveX(SpeedOut, 2).SetEase(Ease.OutCubic);
+            speedInfoText.transform.DOLocalMoveX(SpeedOut, 2).SetEase(Ease.OutCubic);
+            
+            keypadImage.transform.DOLocalMoveX(SelectorOut, 2).SetEase(Ease.OutCubic);
+            quadImage.transform.DOLocalMoveX(SelectorOut, 2).SetEase(Ease.OutCubic);
             audioPlayer.DOFade(0, 3);
             yield return new WaitForSecondsRealtime(1);
             hider.DOColor(Color.black, 2).SetEase(Ease.OutCubic);
@@ -312,13 +318,12 @@ namespace Musics {
                     Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
                     if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) _sequences[2].Restart();
                     else _sequences[3].Restart();
-                    gameMode = gameMode == GameMode.Keypad ? GameMode.Quad : GameMode.Keypad;
+                    MusicManager.SetGameMode(gameMode = gameMode == GameMode.Keypad ? GameMode.Quad : GameMode.Keypad);
                     modeText.color = gameMode.GetColor();
                     modeText.text = $"{gameMode.ToString()} Mode";
                     keypadImage.enabled = gameMode == GameMode.Keypad;
                     quadImage.enabled = gameMode == GameMode.Quad;
                     UpdateSuggestion(MusicManager.Instance.GetCurrentMusicData());
-                    MusicManager.SetGameMode(gameMode);
                 } else if (Input.GetKeyDown(KeyCode.Z)) {
                     NoteManager.NoteSpeedDown(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
                     speedText.text = $"{NoteManager.GetNoteSpeed():F1}";

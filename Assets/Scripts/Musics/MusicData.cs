@@ -89,11 +89,28 @@ namespace Musics {
             blurImage = Resources.Load<Sprite>($"MusicImage/Blur/{name}");
         }
 
+        public void Update() {
+            try {
+                var globalNoteData = Json.LoadJsonFile<GlobalNoteData>($"Assets/Data/Map/Keypad/{name}");
+                keypadNoteData = globalNoteData.data;
+            } catch (FileNotFoundException) {
+                keypadNoteData = null;
+            }
+            try {
+                var globalNoteData = Json.LoadJsonFile<GlobalNoteData>($"Assets/Data/Map/Quad/{name}");
+                quadNoteData = globalNoteData.data;
+            } catch (FileNotFoundException) {
+                quadNoteData = null;
+            }
+        }
+
         public Color GetDifficultyColor() => _difficultyColors[Math.Min(difficulty / 5, 5)];
 
         public NoteData[] GetNoteData(GameMode gameMode) => gameMode == GameMode.Keypad ? keypadNoteData : quadNoteData;
 
-        public List<LiveNoteData> ParseLiveNoteData(GameMode gameMode) => 
-            new List<LiveNoteData>(from data in GetNoteData(gameMode) select new LiveNoteData(data));
+        public List<LiveNoteData> ParseLiveNoteData(GameMode gameMode) {
+            Update();
+            return new List<LiveNoteData>(from data in GetNoteData(gameMode) select new LiveNoteData(data));
+        }
     }
 }

@@ -52,15 +52,13 @@ namespace Listener {
 
         public void Update() {
             if (!MusicManager.Instance.IsPlayMode() && Input.GetKeyDown(KeyCode.Backspace)) {
-                NoteManager.Stop(true);
-                Player.Instance.Stop();
+                Player.Instance.Stop(true);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 if(!Ticker.Instance.IsTickReading()) return;
-                NoteManager.Stop(false);
-                Player.Instance.Stop();
+                Player.Instance.Stop(false);
                 return;
             }
         
@@ -127,6 +125,10 @@ namespace Listener {
         public static float AllowedTime => Math.Min(NoteTime / 10, 0.3f);
 
         private IEnumerator Enqueue(LiveNoteData data) {
+            while (NoteQueue[data.note].Count > 1) {
+                NoteQueue[data.note].Dequeue().Click();
+                Spawn(data, ScoreType.Miss);
+            }
             NoteQueue[data.note].Enqueue(data);
             yield return new WaitForSeconds(NoteTime - AllowedTime * 2);
             if (data.clicked) yield break;

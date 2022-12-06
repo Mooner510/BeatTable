@@ -18,18 +18,20 @@ namespace Musics {
         private void Start() {
             if (MusicManager.Instance.IsPlayMode()) {
                 NoteManager.LoadCurrentData();
+                Debug.Log(NoteManager.GetNoteData().Count);
+                Debug.Log("Data Loaded");
                 recording.enabled = false;
             } else recording.enabled = true;
             StartCoroutine(Init());
         }
 
-        public void Stop() {
+        public void Stop(bool save) {
             StopCoroutine(Init());
-            StartCoroutine(End());
+            StartCoroutine(End(save));
         }
 
-        private IEnumerator End() {
-            NoteManager.Stop(true);
+        private IEnumerator End(bool save) {
+            NoteManager.Stop(save);
             var color = hider.color;
             for (var i = 0f; i <= 3; i += Time.deltaTime) {
                 color.a = i / 3;
@@ -52,12 +54,12 @@ namespace Musics {
             NoteManager.Start();
             var data = MusicManager.Instance.GetCurrentMusicData();
             yield return new WaitForSecondsRealtime(data.minute * 60 + data.second + 1);
-            StartCoroutine(End());
+            StartCoroutine(End(true));
         }
 
         public virtual IEnumerator Accept(LiveNoteData note, float time) {
             var colored = false;
-            yield return new WaitForSecondsRealtime(time);
+            if(time > 0) yield return new WaitForSecondsRealtime(time);
             KeyListener.Instance.Queue(note);
             var obj = Instantiate(beatInspector, GameUtils.Locator(GameMode.Keypad, note.note), Quaternion.identity);
             var spriteRenderer = obj.GetComponent<SpriteRenderer>();

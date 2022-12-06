@@ -27,10 +27,16 @@ namespace Musics.Data {
 
         public static void LoadCurrentData() => _noteData = MusicManager.Instance.GetCurrentMusicData().ParseLiveNoteData(MusicManager.GetCurrentGameMode());
 
+        public static List<LiveNoteData> GetNoteData() => _noteData;
+
         private static void SaveData() {
             var musicData = MusicManager.Instance.GetCurrentMusicData();
             var gameMode = MusicManager.GetCurrentGameMode();
             Json.CreateJsonFile($"Assets/Data/Map/{gameMode.ToString()}/{musicData.name}", new GlobalNoteData(_writeNoteData.ToArray()));
+        }
+
+        private static void ClearRecordData() {
+            _index = 0;
             _writeNoteData = new List<NoteData>();
         }
 
@@ -42,8 +48,11 @@ namespace Musics.Data {
         public static void Stop(bool save) {
             Debug.Log("Stop and Save");
             Ticker.Instance.StopWriteSoftness();
-            if (MusicManager.Instance.IsPlayMode() || !save) return;
-            SaveData();
+            if (!MusicManager.Instance.IsPlayMode() && save) {
+                SaveData();
+                MusicManager.Instance.GetCurrentMusicData().Update();
+            }
+            ClearRecordData();
         }
 
         public static void AddNote(int note) {
