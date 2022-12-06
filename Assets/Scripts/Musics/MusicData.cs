@@ -56,7 +56,6 @@ namespace Musics {
             new Color(0.56470588235294117647058823529412f, 1f, 0.5f),
             new Color(0.98823529411764705882352941176471f, 1f, 0.3921568627450980392156862745098f),
             new Color(1f, 0.67450980392156862745098039215686f, 0.44313725490196078431372549019608f),
-            new Color(1f, 0.67450980392156862745098039215686f, 0.44313725490196078431372549019608f),
             new Color(1f, 0.4078431372549019607843137254902f, 0.4078431372549019607843137254902f),
             new Color(0.74117647058823529411764705882353f, 0.4078431372549019607843137254902f, 1f)
         };
@@ -104,7 +103,7 @@ namespace Musics {
             }
         }
 
-        public Color GetDifficultyColor() => _difficultyColors[Math.Min(difficulty / 5, 5)];
+        public Color GetDifficultyColor() => _difficultyColors[Math.Min(difficulty / 2, 5)];
 
         public NoteData[] GetNoteData(GameMode gameMode) => gameMode == GameMode.Keypad ? keypadNoteData : quadNoteData;
 
